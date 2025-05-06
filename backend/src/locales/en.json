@@ -1,0 +1,12 @@
+{
+    
+    "Unique constraint failed, data already exists" : "Data already exists",
+    "%s not found" : "%s not found",
+    "Database error: %s" : "Database error: %s",
+    "Data validation error" : "Data validation error",
+    "Database connection error" : "Database connection error",
+    "Error in request body: %s" : "Error in request body: %s",
+    "Route not found" : "Route not found",
+    "Internal server error: %s" : "Internal server error: %s"
+    
+}

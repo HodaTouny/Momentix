@@ -1,0 +1,12 @@
+{
+    "Unique constraint failed, data already exists" : "البيانات المدخلة موجودة بالفعل",
+    "%s not found" : "لم يتم العثور على %s",
+    "Database error: %s" : "خطأ في قاعدة البيانات: %s",
+    "Data validation error" : "خطأ في التحقق من البيانات",
+    "Database connection error" : "خطأ في اتصال قاعدة البيانات",
+    "Error in request body: %s" : "خطأ في جسم الطلب: %s",
+    "Route not found" : "المسار غير موجود",
+    "Internal server error: %s" : "خطأ داخلي: %s"
+
+
+}
