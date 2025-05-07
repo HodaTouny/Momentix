@@ -6,7 +6,17 @@
     "Database connection error" : "خطأ في اتصال قاعدة البيانات",
     "Error in request body: %s" : "خطأ في جسم الطلب: %s",
     "Route not found" : "المسار غير موجود",
-    "Internal server error: %s" : "خطأ داخلي: %s"
+    "Internal server error: %s" : "خطأ داخلي: %s",
+    "Event": "الحدث",
+    "Event not found": "الحدث غير موجود",
+    "Event created successfully": "تم إنشاء الحدث بنجاح",
+    "Event updated successfully": "تم تحديث الحدث بنجاح",
+    "Event deleted successfully": "تم حذف الحدث بنجاح",
+    "Unauthorized": "غير مصرح لك بالوصول إلى هذا المسار",
+    "Unauthorized: User not found": "غير مصرح لك بالوصول إلى هذا المسار: المستخدم غير موجود",
+    "Unauthorized: Token not found": "غير مصرح لك بالوصول إلى هذا المسار: الرمز غير موجود",
+    "Unauthorized: No token provided": "غير مصرح لك بالوصول إلى هذا المسار: لم يتم تقديم رمز",
+    "Translation Failed":"فشل في الترجمة"
 
 
 }

@@ -1,4 +1,4 @@
-const i18n = require('../../lib/i18n');
+const i18n = require('../config/i18n');
 const validate = (schema) => {
     return (req, res, next) => {
       const { error, value } = schema.validate(req.body);

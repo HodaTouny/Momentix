@@ -1,6 +1,6 @@
 const { Prisma } = require('@prisma/client');
 const { CustomError } = require('./customErrors');
-const i18n = require('../../lib/i18n');
+const i18n = require('../../config/i18n');
 
 function handlePrismaError(error, modelLabel = i18n.__('Record')) {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {

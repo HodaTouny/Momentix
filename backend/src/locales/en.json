@@ -7,6 +7,16 @@
     "Database connection error" : "Database connection error",
     "Error in request body: %s" : "Error in request body: %s",
     "Route not found" : "Route not found",
-    "Internal server error: %s" : "Internal server error: %s"
+    "Internal server error: %s" : "Internal server error: %s",
+    "Event": "Event",
+    "Event not found": "Event not found",
+    "Event created successfully": "Event created successfully",
+    "Event updated successfully": "Event updated successfully",
+    "Event deleted successfully": "Event deleted successfully",
+    "Unauthorized": "Unauthorized",
+    "Unauthorized: No token provided": "Unauthorized: No token provided",
+    "Unauthorized: Token not found": "Unauthorized: Token not found",
+    "Unauthorized: User not found": "Unauthorized: User not found",
+    "Translation Failed":"Translation Failed"
     
 }
