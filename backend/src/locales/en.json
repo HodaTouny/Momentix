@@ -17,6 +17,14 @@
     "Unauthorized: No token provided": "Unauthorized: No token provided",
     "Unauthorized: Token not found": "Unauthorized: Token not found",
     "Unauthorized: User not found": "Unauthorized: User not found",
-    "Translation Failed":"Translation Failed"
+    "Translation Failed":"Translation Failed",
+    "User":"User",
+    "User already exists":"User already exists",
+    "Invalid Credentials, Email not found":"Invalid Credentials, Email not found",
+    "Invalid Credentials, Password does not match":"Invalid Credentials, Password does not match",
+    "Invalid refresh token":"Invalid refresh token",
+    "User registered successfully":"User registered successfully",
+    "Login successful":"Login successful",
+    "Logged out successfully":"Logged out successfully"
     
 }

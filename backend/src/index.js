@@ -22,6 +22,7 @@ app.use(helmet());
 app.use(xss());
 
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
     app.use((req, res, next) => {
       if (req.headers['x-forwarded-proto'] !== 'https') {
         return res.redirect('https://' + req.headers.host + req.url);
@@ -29,6 +30,14 @@ if (process.env.NODE_ENV === 'production') {
       next();
     });
 }
+
+['JWT_SECRET', 'REFRESH_TOKEN'].forEach((key) => {
+  if (!process.env[key]) {
+    console.error(`Missing environment variable: ${key}`);
+    process.exit(1);
+  }
+});
+
   
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.originalUrl}`);

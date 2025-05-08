@@ -1,4 +1,5 @@
 const { createEventSchema, updateEventSchema } = require('../../src/validations/eventSchema');
+const { registerSchema, loginSchema } = require('../../src/validations/userSchema');
 
 const validData = {
   title_en: 'Concert',
@@ -59,6 +60,65 @@ describe('Event Validation Schemas', () => {
     test('should fail with invalid types even if optional', () => {
       const invalid = { price: 'expensive' };
       const result = updateEventSchema.validate(invalid);
+      expect(result.error).toBeDefined();
+    });
+  });
+});
+
+describe('Auth Validation Schemas', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('registerSchema', () => {
+    test('valid user registration data should pass', () => {
+      const result = registerSchema.validate({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'securePass123'
+      });
+      expect(result.error).toBeUndefined();
+    });
+
+    test('missing required field should fail', () => {
+      const result = registerSchema.validate({
+        email: 'john@example.com',
+        password: 'securePass123'
+      });
+      expect(result.error).toBeDefined();
+      expect(result.error.details[0].message).toMatch(/name/);
+    });
+
+    test('invalid email should fail', () => {
+      const result = registerSchema.validate({
+        name: 'John',
+        email: 'invalid-email',
+        password: 'securePass123'
+      });
+      expect(result.error).toBeDefined();
+    });
+  });
+
+  describe('loginSchema', () => {
+    test('valid login data should pass', () => {
+      const result = loginSchema.validate({
+        email: 'john@example.com',
+        password: 'securePass123'
+      });
+      expect(result.error).toBeUndefined();
+    });
+
+    test('missing email should fail', () => {
+      const result = loginSchema.validate({
+        password: 'securePass123'
+      });
+      expect(result.error).toBeDefined();
+    });
+
+    test('missing password should fail', () => {
+      const result = loginSchema.validate({
+        email: 'john@example.com'
+      });
       expect(result.error).toBeDefined();
     });
   });

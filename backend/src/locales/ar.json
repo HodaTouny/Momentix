@@ -16,7 +16,15 @@
     "Unauthorized: User not found": "غير مصرح لك بالوصول إلى هذا المسار: المستخدم غير موجود",
     "Unauthorized: Token not found": "غير مصرح لك بالوصول إلى هذا المسار: الرمز غير موجود",
     "Unauthorized: No token provided": "غير مصرح لك بالوصول إلى هذا المسار: لم يتم تقديم رمز",
-    "Translation Failed":"فشل في الترجمة"
+    "Translation Failed":"فشل في الترجمة",
+    "User":"المستخدم",
+    "User already exists":"المستخدم موجود بالفعل",
+    "Invalid Credentials, Email not found":"بيانات غير صحيحة، البريد الإلكتروني غير موجود",
+    "Invalid Credentials, Password does not match":"بيانات غير صحيحة، كلمة المرور غير مطابقة",
+    "Invalid refresh token":"رمز تحديث غير صالح",
+    "User registered successfully":"تم التسجيل بنجاح",
+    "Login successful":"تم تسجيل الدخول بنجاح",
+    "Logged out successfully":"تم تسجيل الخروج بنجاح"
 
 
 }

@@ -29,11 +29,16 @@ const mockRes = () => {
   res.json = jest.fn();
   return res;
 };
-
-const mockReqWithLang = (body = {}, lang = 'en') => ({
+const mockReqWithLang = (body = {}, lang = 'en', token = 'Bearer test_token') => ({
   body,
-  headers: { 'accept-language': lang }
+  headers: {
+    'accept-language': lang,
+    'content-type': 'application/json',
+    authorization: token
+  }
 });
+
+
 
 module.exports = {
   mockRes,

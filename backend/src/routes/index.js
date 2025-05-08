@@ -1,5 +1,7 @@
-const eventController = require('../controllers/eventController')
 const express = require('express')
 const router = express.Router()
+const eventRoutes = require('./eventRoutes')
+const authRoutes = require('./authRoutes')
 
-router.use('/events', eventController)
+router.use('/auth', authRoutes)
+router.use('/events', eventRoutes)

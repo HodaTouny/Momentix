@@ -1,5 +1,7 @@
 const i18n = require('../config/i18n');
-
+const jwt = require('jsonwebtoken');
+const prisma = require('../lib/prisma');
+require('dotenv').config();
 
 function requireAdmin(req, res, next) {
     i18n.setLocale(req.language || 'en');
@@ -20,10 +22,6 @@ function requireUser(req, res, next) {
     }
 }
 
-const jwt = require('jsonwebtoken');
-const prisma = require('../lib/prisma');
-const i18n = require('../config/i18n');
-require('dotenv').config();
 
 const authenticateJWT = async (req, res, next) => {
   const authHeader = req.headers.authorization;
