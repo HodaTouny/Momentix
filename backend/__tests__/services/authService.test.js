@@ -1,5 +1,3 @@
-require('../testHelpers');
-
 jest.mock('../../src/lib/prisma', () => ({
   user: {
     findUnique: jest.fn(),

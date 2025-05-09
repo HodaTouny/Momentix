@@ -1,9 +1,7 @@
 const authController = require('../../src/controllers/authController');
 const authService = require('../../src/services/authService');
-const { mockRes, mockReqWithLang } = require('../testHelpers');
-const i18n = require('../../src/config/i18n');
 const { CustomError } = require('../../src/utils/Errors/customErrors');
-
+const i18n = require('../../src/config/i18n'); 
 jest.mock('../../src/services/authService');
 
 describe('AuthController', () => {

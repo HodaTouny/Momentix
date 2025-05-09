@@ -11,7 +11,6 @@ jest.mock('../../src/lib/prisma', () => ({
 const { authenticateJWT, requireUser, requireAdmin } = require('../../src/middlewares/auth');
 const jwt = require('jsonwebtoken'); 
 const prisma = require('../../src/lib/prisma');
-const { mockRes, mockReqWithLang } = require('../testHelpers');
 
 describe('auth middlewares', () => {
   const next = jest.fn();

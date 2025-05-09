@@ -4,6 +4,7 @@ const i18n = require('../config/i18n')
 const {handlePrismaError} = require('../utils/Errors/prismaErrors')
 const { CustomError } = require('../utils/Errors/customErrors')
 const { parseInclude, processFilters } = require('../utils/parseQuery')
+const UploadService = require('./uploadService')
 
 class EventService {
     async getEvents(query, lang) {
@@ -38,15 +39,24 @@ class EventService {
     }
 
     async createEvent(data, lang) {
-        i18n.setLocale(lang)
+        i18n.setLocale(lang);
+        const { imagePath, ...eventData } = data;
         try {
-            const event = await prisma.event.create({ data });
-            return event
+          const event = await prisma.event.create({ data: eventData });      
+          const { secure_url, public_id } = await UploadService.uploadModelImage(imagePath, 'event', event.id);      
+          const updatedEvent = await prisma.event.update({
+            where: { id: event.id },
+            data: { image: secure_url, public_id: public_id },
+          });
+      
+          return updatedEvent;
         } catch (error) {
-            logger.error(error)
-            handlePrismaError(error, i18n.__("Event"))
+          logger.error(error);
+          handlePrismaError(error, i18n.__('Event'));
+        
         }
-    }
+      }
+      
 
     async updateEvent(id, data, lang) {
         i18n.setLocale(lang)
@@ -66,7 +76,9 @@ class EventService {
         try {
             const event = await prisma.event.findUnique({ where: { id } });
             if (!event) throw new CustomError(i18n.__("Event not found"), 404);
-
+            if (event.public_id) {
+                await UploadService.deleteModelImage(event.public_id);
+              }
             const deletedEvent = await prisma.event.delete({ where: { id } });
             return deletedEvent
         } catch (error) {

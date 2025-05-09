@@ -1,6 +1,5 @@
 const { fillMissingTranslations } = require('../../src/middlewares/translate');
 const { Translate } = require('../../src/utils/geminiIntegration');
-const { mockRes } = require('../testHelpers');
 
 jest.mock('../../src/utils/geminiIntegration', () => ({
   Translate: jest.fn()

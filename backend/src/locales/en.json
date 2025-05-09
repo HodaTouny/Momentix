@@ -25,6 +25,10 @@
     "Invalid refresh token":"Invalid refresh token",
     "User registered successfully":"User registered successfully",
     "Login successful":"Login successful",
-    "Logged out successfully":"Logged out successfully"
+    "Logged out successfully":"Logged out successfully",
+    "Image upload failed":"Image upload failed",
+    "Image deletion failed":"Image deletion failed",
+    "Image is required":"Image is required",
+    "Only image files are allowed":"Only image files are allowed"
     
 }

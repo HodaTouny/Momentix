@@ -17,20 +17,23 @@ class EventController {
       res.status(400).json({ error: error.message });
     }
   }
-
   async createEvent(req, res) {
-    const lang = this.setLocale(req);
+    const lang = req.headers['accept-language'];
     try {
-      const event = await eventService.createEvent(req.body, lang);
-      res.status(201).json({
-        message: i18n.__("Event created successfully"),
-        event
-      });
+      i18n.setLocale(lang);
+      const { buffer: imagePath } = req.file || {};
+
+      if (!imagePath) {
+        return res.status(400).json({ error: i18n.__('Image is required') });
+      }
+
+      const event = await eventService.createEvent({ ...req.body, imagePath }, lang);
+      res.status(201).json({message: i18n.__('Event created successfully'),event});
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
   }
-
+  
   async updateEvent(req, res) {
     const lang = this.setLocale(req);
     const { id } = req.params;

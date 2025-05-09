@@ -10,7 +10,6 @@ const createEventSchema = joi.object({
   date: joi.date().required(),
   venue_en: joi.string().required(),
   venue_ar: joi.string().required(),
-  image: joi.string().required(),
   price: joi.number().required(),
   created_by: joi.number().required()
 });
@@ -25,7 +24,6 @@ const updateEventSchema = joi.object({
   date: joi.date(),
   venue_ar: joi.string(),
   venue_en: joi.string(),
-  image: joi.string(),
   price: joi.number(),
   created_by: joi.number()
 });

@@ -1,9 +1,11 @@
+
 const eventController = require('../../src/controllers/eventController');
 const eventService = require('../../src/services/eventService');
-const i18n = require('../../src/config/i18n');
-const { mockRes } = require('../testHelpers.js'); 
+const UploadService = require('../../src/services/uploadService');
+const i18n = require('../../src/config/i18n'); 
 
 jest.mock('../../src/services/eventService');
+jest.mock('../../src/services/uploadService');
 
 describe('EventController', () => {
   afterEach(() => {
@@ -40,11 +42,12 @@ describe('EventController', () => {
   describe('createEvent', () => {
     test('should create event', async () => {
       const req = {
-        body: { title_en: 'Test' },
+        body: { title_en: 'Test Event', title_ar: 'حدث اختبار' },
+        file: { buffer: Buffer.from('fake image') },
         headers: { 'accept-language': 'ar' }
       };
       const res = mockRes();
-      const created = { id: 1 };
+      const created = { id: 1, title_en: 'Test Event', title_ar: 'حدث اختبار' };
 
       eventService.createEvent.mockResolvedValue(created);
 
@@ -58,17 +61,34 @@ describe('EventController', () => {
       });
     });
 
-    test('should handle create error', async () => {
-      const req = { body: {}, headers: {} };
+    test('should return 400 if image is missing', async () => {
+      const req = {
+        body: { title_en: 'No Image Event' },
+        headers: { 'accept-language': 'ar' }
+      };
       const res = mockRes();
-      const error = new Error('Insert failed');
+
+      await eventController.createEvent(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Image is required' });
+    });
+
+    test('should handle service-level error on event creation', async () => {
+      const req = {
+        body: { title_en: 'Test Event' },
+        file: { buffer: Buffer.from('fake image') },
+        headers: { 'accept-language': 'ar' }
+      };
+      const res = mockRes();
+      const error = new Error('Service failed');
 
       eventService.createEvent.mockRejectedValue(error);
 
       await eventController.createEvent(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: error.message });
+      expect(res.json).toHaveBeenCalledWith({ error: 'Service failed' });
     });
   });
 
@@ -76,11 +96,11 @@ describe('EventController', () => {
     test('should update event', async () => {
       const req = {
         params: { id: '1' },
-        body: {},
+        body: { title_en: 'Updated Event' },
         headers: { 'accept-language': 'en' }
       };
       const res = mockRes();
-      const updated = { id: 1, title_en: 'Updated' };
+      const updated = { id: 1, title_en: 'Updated Event' };
 
       eventService.updateEvent.mockResolvedValue(updated);
 

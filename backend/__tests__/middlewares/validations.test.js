@@ -11,7 +11,6 @@ const validData = {
   date: new Date(),
   venue_en: 'Cairo Stadium',
   venue_ar: 'استاد القاهرة',
-  image: 'url-to-image.jpg',
   price: 100,
   created_by: 1
 };

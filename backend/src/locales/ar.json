@@ -24,7 +24,11 @@
     "Invalid refresh token":"رمز تحديث غير صالح",
     "User registered successfully":"تم التسجيل بنجاح",
     "Login successful":"تم تسجيل الدخول بنجاح",
-    "Logged out successfully":"تم تسجيل الخروج بنجاح"
+    "Logged out successfully":"تم تسجيل الخروج بنجاح",
+    "Image upload failed":"فشل في تحميل الصورة",
+    "Image deletion failed":"فشل في حذف الصورة",
+    "Image is required":"الصورة مطلوبة",
+    "Only image files are allowed":"مسموح بالصور فقط"
 
 
 }

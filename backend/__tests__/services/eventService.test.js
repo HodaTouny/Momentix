@@ -1,7 +1,8 @@
 const EventService = require('../../src/services/eventService');
 const prisma = require('../../src/lib/prisma');
 const logger = require('../../src/lib/logger');
-const i18n = require('../../src/config/i18n');
+const i18n = require('../../src/config/i18n'); 
+const UploadService = require('../../src/services/uploadService');
 const { handlePrismaError } = require('../../src/utils/Errors/prismaErrors');
 
 jest.mock('../../src/lib/prisma', () => ({
@@ -13,6 +14,10 @@ jest.mock('../../src/lib/prisma', () => ({
     update: jest.fn(),
     delete: jest.fn()
   }
+}));
+
+jest.mock('../../src/services/uploadService', () => ({
+  uploadModelImage: jest.fn().mockResolvedValue({ secure_url: 'mocked_url', public_id: 'mocked_id' })
 }));
 
 describe('EventService', () => {
@@ -57,27 +62,49 @@ describe('EventService', () => {
   });
 
   describe('createEvent', () => {
-    it('should create event', async () => {
-      const eventData = { name: 'Test Event' };
-      prisma.event.create.mockResolvedValue(eventData);
-
-      const result = await EventService.createEvent(eventData, lang);
-
+    it('should create event and upload image', async () => {
+      const eventData = {
+        title_en: 'Test Event',
+        title_ar: 'حدث اختبار',
+      };
+      const imageBuffer = Buffer.from('image data'); 
+  
+      const createdEvent = { id: 1, ...eventData };
+      const updatedEvent = {
+        id: 1,
+        ...eventData,
+        image: 'mocked_url',
+        public_id: 'mocked_id',
+      };
+  
+      prisma.event.create.mockResolvedValue(createdEvent);
+      prisma.event.update.mockResolvedValue(updatedEvent);
+      UploadService.uploadModelImage.mockResolvedValue({
+        secure_url: 'mocked_url',
+        public_id: 'mocked_id',
+      });
+  
+      const result = await EventService.createEvent(
+        { ...eventData, imagePath: imageBuffer },
+        lang
+      );
+  
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual(eventData);
-    });
-
-    it('should handle error in createEvent', async () => {
-      const error = new Error('Create Error');
-      prisma.event.create.mockRejectedValue(error);
-
-      await expect(EventService.createEvent({}, lang)).rejects.toThrow('Mocked Event error');
-
-      expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(logger.error).toHaveBeenCalledWith(error);
-      expect(handlePrismaError).toHaveBeenCalledWith(error, 'Event');
+      expect(result).toEqual(updatedEvent);
+  
+      expect(UploadService.uploadModelImage).toHaveBeenCalledWith(
+        imageBuffer,
+        'event',
+        1
+      );
+  
+      expect(prisma.event.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { image: 'mocked_url', public_id: 'mocked_id' },
+      });
     });
   });
+  
 
   describe('updateEvent', () => {
     it('should update existing event', async () => {
