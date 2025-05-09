@@ -28,7 +28,11 @@
     "Image upload failed":"فشل في تحميل الصورة",
     "Image deletion failed":"فشل في حذف الصورة",
     "Image is required":"الصورة مطلوبة",
-    "Only image files are allowed":"مسموح بالصور فقط"
+    "Only image files are allowed":"مسموح بالصور فقط",
+    "You have already booked this event":"لقد حجزت هذا الحدث بالفعل",
+    "Booking":"الحجز",
+    "Event booked successfully":"تم حجز الحدث بنجاح"
+    
 
 
 }

@@ -29,6 +29,9 @@
     "Image upload failed":"Image upload failed",
     "Image deletion failed":"Image deletion failed",
     "Image is required":"Image is required",
-    "Only image files are allowed":"Only image files are allowed"
+    "Only image files are allowed":"Only image files are allowed",
+    "You have already booked this event":"You have already booked this event",
+    "Booking":"Booking",
+    "Event booked successfully":"Event booked successfully"
     
 }
