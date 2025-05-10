@@ -24,19 +24,15 @@ function requireUser(req, res, next) {
 
 
 const authenticateJWT = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.access_token;
   i18n.setLocale(req.headers['accept-language'] || 'en');
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-
+  if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
       const user = await prisma.user.findUnique({
-        where: { id: decoded.id },
-      });
-      
+        where: { user_id: decoded.id },
+      });  
       if (user) {
         req.user = user;
         next();

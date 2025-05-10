@@ -3,7 +3,7 @@ const logger = require('../lib/logger')
 const i18n = require('../config/i18n')
 const {handlePrismaError} = require('../utils/Errors/prismaErrors')
 const { CustomError } = require('../utils/Errors/customErrors')
-const { parseInclude, processFilters } = require('../utils/parseQuery')
+const { parseInclude, processFilters , parseOrderBy} = require('../utils/parseQuery')
 const UploadService = require('./uploadService')
 
 class EventService {
@@ -12,7 +12,7 @@ class EventService {
         try {
             let { page, pageSize, include, orderBy, ...filters } = query;
             if (include) include = parseInclude(include);
-            if (orderBy) orderBy = parseInclude(orderBy);
+            if (orderBy) orderBy = parseOrderBy(orderBy);
             filters = processFilters(filters);
             const options = { where: filters, include, orderBy };
             const pageNum = parseInt(page, 10) 
@@ -38,14 +38,15 @@ class EventService {
         }
     }
 
+
     async createEvent(data, lang) {
         i18n.setLocale(lang);
         const { imagePath, ...eventData } = data;
         try {
           const event = await prisma.event.create({ data: eventData });      
-          const { secure_url, public_id } = await UploadService.uploadModelImage(imagePath, 'event', event.id);      
+          const { secure_url, public_id } = await UploadService.uploadModelImage(imagePath, 'event', event.event_id);
           const updatedEvent = await prisma.event.update({
-            where: { id: event.id },
+            where: { event_id: event.event_id },
             data: { image: secure_url, public_id: public_id },
           });
       
@@ -58,31 +59,55 @@ class EventService {
       }
       
 
-    async updateEvent(id, data, lang) {
-        i18n.setLocale(lang)
+      async updateEvent(id, data, lang) {
+        i18n.setLocale(lang);
         try {
-            const event = await prisma.event.findUnique({ where: { id } });
-            if (!event) throw new CustomError(i18n.__("Event not found"), 404);
-            const updatedEvent = await prisma.event.update({ where: { id }, data: data });
-            return updatedEvent
+          const event = await prisma.event.findUnique({ where: { event_id: id } });
+          if (!event) throw new CustomError(i18n.__("Event not found"), 404);
+      
+          const { imagePath, ...restData } = data;
+          let updatedData = { ...restData };
+      
+          if (imagePath) {
+            if (event.public_id) {
+              await UploadService.deleteModelImage(event.public_id);
+            }
+            const { secure_url, public_id } = await UploadService.uploadModelImage(imagePath, 'event', id);
+            updatedData.image = secure_url;
+            updatedData.public_id = public_id;
+          }
+      
+          const updatedEvent = await prisma.event.update({
+            where: { event_id: id },
+            data: updatedData
+          });
+      
+          return updatedEvent;
         } catch (error) {
-            logger.error(error)
-            handlePrismaError(error, i18n.__("Event"))
+          logger.error(error);
+          if (error instanceof CustomError) {
+            throw error;
+          }
+          handlePrismaError(error, i18n.__("Event"));
         }
-    }
+      }
+      
 
     async deleteEvent(id, lang) {
         i18n.setLocale(lang)
         try {
-            const event = await prisma.event.findUnique({ where: { id } });
+            const event = await prisma.event.findUnique({ where: { event_id: id } });
             if (!event) throw new CustomError(i18n.__("Event not found"), 404);
             if (event.public_id) {
                 await UploadService.deleteModelImage(event.public_id);
               }
-            const deletedEvent = await prisma.event.delete({ where: { id } });
+            const deletedEvent = await prisma.event.delete({ where: { event_id: id } });
             return deletedEvent
         } catch (error) {
             logger.error(error)
+            if(error instanceof CustomError){
+                throw error
+            }
             handlePrismaError(error, i18n.__("Event"))
         }
     }
@@ -90,11 +115,14 @@ class EventService {
     async getEvent(id, lang) {
         i18n.setLocale(lang)
         try {
-            const event = await prisma.event.findUnique({ where: { id } });
+            const event = await prisma.event.findUnique({ where: { event_id: id } });
             if (!event) throw new CustomError(i18n.__("Event not found"), 404);
             return event
         } catch (error) {
             logger.error(error)
+            if(error instanceof CustomError){
+                throw error
+            }
             handlePrismaError(error, i18n.__("Event"))
         }
     }

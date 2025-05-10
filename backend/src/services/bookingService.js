@@ -13,7 +13,7 @@ class BookingService {
       if (existing) {
         throw new CustomError(i18n.__('You have already booked this event'), 400);
       }
-      const event = await prisma.event.findUnique({ where: { id: eventId } });
+      const event = await prisma.event.findUnique({ where: { event_id: eventId } });
       if (!event) {
         throw new CustomError(i18n.__('Event not found'), 404);
       }

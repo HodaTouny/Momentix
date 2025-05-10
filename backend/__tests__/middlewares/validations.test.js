@@ -8,7 +8,7 @@ const validData = {
   description_ar: 'عرض موسيقي',
   category_en: 'Music',
   category_ar: 'موسيقى',
-  date: new Date(),
+  date: new Date(Date.now() + 60 * 60 * 1000),
   venue_en: 'Cairo Stadium',
   venue_ar: 'استاد القاهرة',
   price: 100,

@@ -24,8 +24,10 @@ describe('auth middlewares', () => {
       const mockUser = { id: 1, name: 'Test User', role: 'user' };
       jwt.verify.mockReturnValue({ id: 1 });
       prisma.user.findUnique.mockResolvedValue(mockUser);
-
-      const req = mockReqWithLang({}, 'en', 'Bearer valid_token');
+      const req = {
+        cookies: { access_token: 'valid_token' },
+        headers: { 'accept-language': 'en' },
+      };
       const res = mockRes();
 
       await authenticateJWT(req, res, next);
@@ -37,7 +39,11 @@ describe('auth middlewares', () => {
     it('should return 401 if token is invalid', async () => {
       jwt.verify.mockImplementation(() => { throw new Error('Invalid'); });
 
-      const req = mockReqWithLang({}, 'en', 'Bearer invalid_token');
+      const req = {
+        cookies: { access_token: 'invalid_token' },
+        headers: { 'accept-language': 'en' },
+      };
+      
       const res = mockRes();
 
       await authenticateJWT(req, res, next);
@@ -47,7 +53,11 @@ describe('auth middlewares', () => {
     });
 
     it('should return 401 if no token provided', async () => {
-      const req = mockReqWithLang({}, 'en', '');
+      const req = {
+        cookies: {},
+        headers: { 'accept-language': 'en' },
+      };
+      
       const res = mockRes();
 
       await authenticateJWT(req, res, next);

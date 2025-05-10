@@ -2,18 +2,23 @@ const bookingService = require('../services/bookingService');
 const i18n = require('../config/i18n');
 
 class BookingController {
-  setLanguage(req) {
+  constructor() {
+    this.setLocale = this.setLocale.bind(this);
+    this.bookEvent = this.bookEvent.bind(this);
+    this.getMyBookings = this.getMyBookings.bind(this);
+  }
+  setLocale(req) {
     const lang = req.headers['accept-language'] || 'en';
     i18n.setLocale(lang);
     return lang;
   }
 
   async bookEvent(req, res) {
-    const lang = this.setLanguage(req);
+    const lang = this.setLocale(req);
     const { eventId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user.user_id;
     try {
-      const booking = await bookingService.book(userId, eventId, lang);
+      const booking = await bookingService.book(userId, Number(eventId), lang);
       res.status(201).json({message: i18n.__('Event booked successfully'),booking});
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -21,8 +26,8 @@ class BookingController {
   }
 
   async getMyBookings(req, res) {
-    const lang = this.setLanguage(req);
-    const userId = req.user.id;
+    const lang = this.setLocale(req);
+    const userId = req.user.user_id;
 
     try {
       const bookings = await bookingService.getByUser(userId, lang);

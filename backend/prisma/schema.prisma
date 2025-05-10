@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
+
 
 datasource db {
   provider = "postgresql"
@@ -32,8 +32,8 @@ model Event {
   venue_en          String
   venue_ar          String
   price          Decimal   @db.Decimal(10, 2)
-  image          String
-  public_id      String
+  image          String?
+  public_id      String?
   created_at     DateTime  @default(now())
   created_by     Int
 

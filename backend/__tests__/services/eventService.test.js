@@ -29,24 +29,24 @@ describe('EventService', () => {
 
   describe('getEvents', () => {
     it('should return paginated results', async () => {
-      prisma.event.findMany.mockResolvedValue([{ id: 1 }]);
+      prisma.event.findMany.mockResolvedValue([{ event_id: 1 }]);
       prisma.event.count.mockResolvedValue(1);
       const query = { page: '1', pageSize: '10' };
 
       const result = await EventService.getEvents(query, lang);
 
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual({ data: [{ id: 1 }], total: 1, page: 1, pageSize: 10 });
+      expect(result).toEqual({ data: [{ event_id: 1 }], total: 1, page: 1, pageSize: 10 });
     });
 
     it('should return all events if no pagination', async () => {
-      prisma.event.findMany.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+      prisma.event.findMany.mockResolvedValue([{ event_id: 1 }, { event_id: 2 }]);
       const query = {};
 
       const result = await EventService.getEvents(query, lang);
 
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual([{ id: 1 }, { id: 2 }]);
+      expect(result).toEqual([{ event_id: 1 }, { event_id: 2 }]);
     });
 
     it('should handle errors in getEvents', async () => {
@@ -67,11 +67,11 @@ describe('EventService', () => {
         title_en: 'Test Event',
         title_ar: 'حدث اختبار',
       };
-      const imageBuffer = Buffer.from('image data'); 
+      const imageBuffer = Buffer.from('image data');
   
-      const createdEvent = { id: 1, ...eventData };
+      const createdEvent = { event_id: 1, ...eventData }; 
       const updatedEvent = {
-        id: 1,
+        event_id: 1,
         ...eventData,
         image: 'mocked_url',
         public_id: 'mocked_id',
@@ -95,26 +95,27 @@ describe('EventService', () => {
       expect(UploadService.uploadModelImage).toHaveBeenCalledWith(
         imageBuffer,
         'event',
-        1
+        1 
       );
   
       expect(prisma.event.update).toHaveBeenCalledWith({
-        where: { id: 1 },
+        where: { event_id: 1 },
         data: { image: 'mocked_url', public_id: 'mocked_id' },
       });
     });
   });
   
+  
 
   describe('updateEvent', () => {
     it('should update existing event', async () => {
-      prisma.event.findUnique.mockResolvedValue({ id: 1 });
-      prisma.event.update.mockResolvedValue({ id: 1, name: 'Updated' });
+      prisma.event.findUnique.mockResolvedValue({ event_id: 1 });
+      prisma.event.update.mockResolvedValue({ event_id: 1, name: 'Updated' });
 
       const result = await EventService.updateEvent(1, { name: 'Updated' }, lang);
 
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual({ id: 1, name: 'Updated' });
+      expect(result).toEqual({ event_id: 1, name: 'Updated' });
     });
 
     it('should throw if event not found', async () => {
@@ -128,7 +129,7 @@ describe('EventService', () => {
 
     it('should handle error in updateEvent', async () => {
       const error = new Error('Update Error');
-      prisma.event.findUnique.mockResolvedValue({ id: 1 });
+      prisma.event.findUnique.mockResolvedValue({ event_id: 1 });
       prisma.event.update.mockRejectedValue(error);
 
       await expect(EventService.updateEvent(1, {}, lang)).rejects.toThrow('Mocked Event error');
@@ -141,12 +142,12 @@ describe('EventService', () => {
 
   describe('deleteEvent', () => {
     it('should delete event', async () => {
-      prisma.event.delete.mockResolvedValue({ id: 1 });
+      prisma.event.delete.mockResolvedValue({ event_id: 1 });
 
       const result = await EventService.deleteEvent(1, lang);
 
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual({ id: 1 });
+      expect(result).toEqual({ event_id: 1 });
     });
 
     it('should handle error in deleteEvent', async () => {
@@ -163,12 +164,12 @@ describe('EventService', () => {
 
   describe('getEvent', () => {
     it('should get event by id', async () => {
-      prisma.event.findUnique.mockResolvedValue({ id: 1 });
+      prisma.event.findUnique.mockResolvedValue({ event_id: 1 });
 
       const result = await EventService.getEvent(1, lang);
 
       expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual({ id: 1 });
+      expect(result).toEqual({ event_id: 1 });
     });
 
     it('should throw if event not found', async () => {

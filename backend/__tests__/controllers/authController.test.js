@@ -52,6 +52,7 @@ describe('AuthController', () => {
       res.cookie = jest.fn();
 
       authService.login.mockResolvedValue({
+        message: 'Login successful',
         accessToken: 'access_token',
         refreshToken: 'refresh_token'
       });
@@ -63,7 +64,11 @@ describe('AuthController', () => {
       expect(res.cookie).toHaveBeenCalledWith('access_token', 'access_token', expect.any(Object));
       expect(res.cookie).toHaveBeenCalledWith('refresh_token', 'refresh_token', expect.any(Object));
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Login successful' });
+      expect(res.json).toHaveBeenCalledWith({ 
+        message: 'Login successful',
+        accessToken: 'access_token',
+        refreshToken: 'refresh_token'
+       });
     });
 
     it('should handle login errors', async () => {

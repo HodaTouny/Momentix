@@ -3,6 +3,13 @@ const i18n = require('../config/i18n');
 const { accessTokenOptions, refreshTokenOptions } = require('../config/secureCookies');
 
 class AuthController {
+  constructor() {
+    this.setLocale = this.setLocale.bind(this);
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
+    this.refreshToken = this.refreshToken.bind(this);
+    this.logout = this.logout.bind(this);
+  }
   setLocale(req) {
     const lang = req.headers['accept-language'] || 'en';
     i18n.setLocale(lang);
@@ -28,7 +35,7 @@ class AuthController {
       const { accessToken, refreshToken } = await authService.login(req.body, lang);
       res.cookie('access_token', accessToken, accessTokenOptions);
       res.cookie('refresh_token', refreshToken, refreshTokenOptions);
-      res.status(200).json({ message: i18n.__('Login successful') });
+      res.status(200).json({ message: i18n.__('Login successful'), accessToken, refreshToken });
     } catch (error) {
       res.status(error.status || 500).json({ message: error.message });
     }

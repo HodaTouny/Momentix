@@ -47,7 +47,24 @@ function parseInclude(include) {
   return rec(include);
 }
 
+function parseOrderBy(orderBy) {
+  if (!orderBy) return undefined;
+
+  if (typeof orderBy === 'string') {
+    orderBy = JSON.parse(orderBy);
+  }
+
+  if (Array.isArray(orderBy)) {
+    return orderBy.map(field => {
+      const [key, direction] = field.split('_');
+      return { [key]: direction.toLowerCase() };
+    });
+  }
+
+  return orderBy;
+}
 module.exports = {
   processFilters,
-  parseInclude
+  parseInclude,
+  parseOrderBy  
 };

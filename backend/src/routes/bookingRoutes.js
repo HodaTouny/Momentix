@@ -1,13 +1,13 @@
 const express = require('express');
 const BookingController = require('../controllers/bookingController');
-const { requireUser, authenticateJWT } = require('../middlewares/authMiddleware');
+const { requireUser, authenticateJWT } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
-const { createBookingSchema } = require('../schemas/bookingSchema');
+const { createBookingSchema } = require('../validations/bookingSchema');
 const router = express.Router();
 
 router.use(authenticateJWT);
 router.use(requireUser);
-router.post('/:eventId',validate(createBookingSchema), BookingController.bookEvent);
+router.get('/:eventId',validate(createBookingSchema), BookingController.bookEvent);
 router.get('/', BookingController.getMyBookings);
 
 module.exports = router;

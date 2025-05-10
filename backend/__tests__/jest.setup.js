@@ -27,14 +27,16 @@ const mockRes = () => {
   return res;
 };
 
-const mockReqWithLang = (body = {}, lang = 'en', token = 'Bearer test_token') => ({
+const mockReqWithLang = (body = {}, lang = 'en', token = 'Bearer test_token', cookies = {}) => ({
   body,
   headers: {
     'accept-language': lang,
     'content-type': 'application/json',
-    authorization: token
-  }
+    authorization: token,
+  },
+  cookies,  
 });
+
 
 global.mockRes = mockRes;
 global.mockReqWithLang = mockReqWithLang;

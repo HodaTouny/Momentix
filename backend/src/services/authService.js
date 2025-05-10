@@ -9,6 +9,7 @@ const logger = require('../lib/logger');
 class AuthService {
   async register(data, lang) {
     try {
+      i18n.setLocale(lang);
       const { name, email, password } = data;
 
       const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -29,11 +30,15 @@ class AuthService {
       return user;
     } catch (error) {
       logger.error(error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
       handlePrismaError(error, i18n.__('User'));
     }
   }
 
   async login(credentials, lang) {
+    i18n.setLocale(lang);
     try {
       const { email, password } = credentials;
 
@@ -54,11 +59,15 @@ class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       logger.error(error);
+      if (error instanceof CustomError) {
+        throw error;
+      }
       handlePrismaError(error, i18n.__('User'));
     }
   }
 
   async refreshToken(token, lang) {
+    i18n.setLocale(lang);
     try {
       const decoded = verifyRefreshToken(token);
       const payload = { id: decoded.id, role: decoded.role };
