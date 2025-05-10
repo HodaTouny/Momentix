@@ -55,8 +55,9 @@ class AuthService {
       const payload = { id: user.user_id, role: user.role };
       const accessToken = generateToken(payload);
       const refreshToken = generateRefetchToken(payload);
+      const newUser = {user_id: user.user_id, email: user.email, role: user.role};
 
-      return { accessToken, refreshToken };
+      return { accessToken, refreshToken, user: newUser };
     } catch (error) {
       logger.error(error);
       if (error instanceof CustomError) {

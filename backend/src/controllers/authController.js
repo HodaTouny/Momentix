@@ -32,10 +32,10 @@ class AuthController {
   async login(req, res) {
     const lang = this.setLocale(req);
     try {
-      const { accessToken, refreshToken } = await authService.login(req.body, lang);
+      const { accessToken, refreshToken ,user} = await authService.login(req.body, lang);
       res.cookie('access_token', accessToken, accessTokenOptions);
       res.cookie('refresh_token', refreshToken, refreshTokenOptions);
-      res.status(200).json({ message: i18n.__('Login successful'), accessToken, refreshToken });
+      res.status(200).json({ message: i18n.__('Login successful'), accessToken, refreshToken,user });
     } catch (error) {
       res.status(error.status || 500).json({ message: error.message });
     }

@@ -86,7 +86,12 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         accessToken: 'access_token',
-        refreshToken: 'refresh_token' // ✅ FIXED key casing here
+        refreshToken: 'refresh_token',
+        user: {
+          user_id: 1,
+          email: 'john@example.com',
+          role: 'user'
+        }
       });
     });
 
