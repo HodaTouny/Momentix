@@ -98,6 +98,8 @@ class EventService {
         try {
             const event = await prisma.event.findUnique({ where: { event_id: id } });
             if (!event) throw new CustomError(i18n.__("Event not found"), 404);
+
+            await prisma.booking.deleteMany({where: { event_id: id }});
             if (event.public_id) {
                 await UploadService.deleteModelImage(event.public_id);
               }

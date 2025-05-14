@@ -8,6 +8,6 @@ const router = express.Router();
 router.use(authenticateJWT);
 router.use(requireUser);
 router.get('/:eventId',validate(createBookingSchema), BookingController.bookEvent);
-router.get('/', BookingController.getMyBookings);
+router.get('/', authenticateJWT,requireUser,BookingController.getMyBookings);
 
 module.exports = router;

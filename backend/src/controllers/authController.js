@@ -59,6 +59,19 @@ class AuthController {
     res.clearCookie('refresh_token');
     res.status(200).json({ message: i18n.__('Logged out successfully') });
   }
+
+ async getCurrentUser(req, res) {
+  try {
+    const user = req.user; 
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+}
+
 }
 
 module.exports = new AuthController();

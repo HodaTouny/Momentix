@@ -13,11 +13,16 @@ jest.mock('../../src/lib/prisma', () => ({
     findUnique: jest.fn(),
     update: jest.fn(),
     delete: jest.fn()
+  },
+   booking: {
+    deleteMany: jest.fn()
   }
 }));
 
 jest.mock('../../src/services/uploadService', () => ({
-  uploadModelImage: jest.fn().mockResolvedValue({ secure_url: 'mocked_url', public_id: 'mocked_id' })
+  uploadModelImage: jest.fn().mockResolvedValue({ secure_url: 'mocked_url', public_id: 'mocked_id' }),
+  deleteModelImage: jest.fn().mockResolvedValue(),
+
 }));
 
 describe('EventService', () => {
@@ -141,26 +146,46 @@ describe('EventService', () => {
   });
 
   describe('deleteEvent', () => {
-    it('should delete event', async () => {
-      prisma.event.delete.mockResolvedValue({ event_id: 1 });
+    it('should delete event after deleting related bookings', async () => {
+    prisma.event.findUnique.mockResolvedValue({ event_id: 1, public_id: 'mocked_public_id' });
+    prisma.booking.deleteMany.mockResolvedValue({ count: 2 });
+    UploadService.deleteModelImage.mockResolvedValue();
+    prisma.event.delete.mockResolvedValue({ event_id: 1 });
 
-      const result = await EventService.deleteEvent(1, lang);
+    const result = await EventService.deleteEvent(1, lang);
 
-      expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(result).toEqual({ event_id: 1 });
-    });
+    expect(i18n.setLocale).toHaveBeenCalledWith(lang);
+    expect(prisma.booking.deleteMany).toHaveBeenCalledWith({ where: { event_id: 1 } });
+    expect(UploadService.deleteModelImage).toHaveBeenCalledWith('mocked_public_id');
+    expect(prisma.event.delete).toHaveBeenCalledWith({ where: { event_id: 1 } });
+    expect(result).toEqual({ event_id: 1 });
 
-    it('should handle error in deleteEvent', async () => {
-      const error = new Error('Delete Error');
-      prisma.event.delete.mockRejectedValue(error);
-
-      await expect(EventService.deleteEvent(1, lang)).rejects.toThrow('Mocked Event error');
-
-      expect(i18n.setLocale).toHaveBeenCalledWith(lang);
-      expect(logger.error).toHaveBeenCalledWith(error);
-      expect(handlePrismaError).toHaveBeenCalledWith(error, 'Event');
-    });
   });
+
+
+  it('should throw error if event not found when trying to delete', async () => {
+    prisma.event.findUnique.mockResolvedValue(null);
+
+    await expect(EventService.deleteEvent(1, lang)).rejects.toThrow('Event not found');
+
+    expect(i18n.setLocale).toHaveBeenCalledWith(lang);
+    expect(i18n.__).toHaveBeenCalledWith('Event not found');
+  });
+
+  it('should handle error in deleteEvent', async () => {
+    const error = new Error('Delete Error');
+    prisma.event.findUnique.mockResolvedValue({ event_id: 1 });
+    prisma.booking = { deleteMany: jest.fn().mockResolvedValue({ count: 0 }) };
+    prisma.event.delete.mockRejectedValue(error);
+
+    await expect(EventService.deleteEvent(1, lang)).rejects.toThrow('Mocked Event error');
+
+    expect(i18n.setLocale).toHaveBeenCalledWith(lang);
+    expect(logger.error).toHaveBeenCalledWith(error);
+    expect(handlePrismaError).toHaveBeenCalledWith(error, 'Event');
+  });
+});
+
 
   describe('getEvent', () => {
     it('should get event by id', async () => {

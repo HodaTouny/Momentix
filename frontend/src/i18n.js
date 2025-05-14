@@ -1,0 +1,137 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+const resources = {
+  en: {
+    translation: {
+      "Welcome": "Welcome",
+      "Create Event": "Create Event",
+      "View Events": "View Events",
+      "Language": "Language",
+      "Book Now": "Book Now",
+      "Congratulations! Booking Confirmed": "Congratulations! Booking Confirmed",
+      "Register": "Register",
+      "Login": "Login",
+      "Logout": "Logout",
+      "Your Moments, Mastered — Welcome to Momentix": "Your Moments, Mastered — Welcome to Momentix",
+      "Plan, book, and celebrate unforgettable events — all in one place.": "Plan, book, and celebrate unforgettable events — all in one place.",
+      "Explore Events": "Explore Events",
+      "Booked": "Booked",
+      "Momentix. All rights reserved.": "Momentix. All rights reserved.",
+      "Home": "Home",
+      "Newest First": "Newest First",
+      "Oldest First": "Oldest First",
+      "Next": "Next",
+      "Previous": "Previous",
+      "page":"page",
+      "of":"of",
+      "Error loading events": "Error loading events",
+      "Technical": "Technical",
+       "Music": 'Music',
+      "Business": 'Business',
+      "Education": 'Education',
+      "Health": 'Health',
+      "Sports": 'Sports',
+      "Art": 'Art',
+      "Food": 'Food',
+      "other": 'other',
+      "All Categories": "All Categories",
+      "Momentix. All rights reserved": "Momentix. All rights reserved.",
+      "No events found": "No events found",
+      "Category": "Category",
+      "Description": "Description",
+      "Venue": "Venue",
+      "Title": "Title",
+      "Date": "Date",
+      "Price": "Price",
+      "Add the other language manually or auto-translate using AI?": "Add the other language manually or auto-translate using AI?",
+      "Manual": "Manual",
+      "Auto": "Auto",
+      "Cancel": "Cancel",
+      "Confirm": "Confirm",
+      "Edit": "Edit",
+      "Delete": "Delete",
+      "Delete Event?": "Delete Event?",
+      "Are you sure you want to delete this event?": "Are you sure you want to delete this event?",
+      "Congratulations! Your booking was successful!": "Congratulations! Your booking was successful!",
+      "Back to Home": "Back to Home",
+      "Deleting...": "Deleting...",
+
+    }
+  },
+  ar: {
+    translation: {
+      "Welcome": "مرحبا",
+      "Create Event": "إنشاء حدث",
+      "View Events": "عرض الأحداث",
+      "Language": "اللغة",
+      "Book Now": "احجز الآن",
+      "Congratulations! Booking Confirmed": "تهانينا! تم تأكيد الحجز",
+      "Register": "تسجيل",
+      "Login": "تسجيل دخول",
+      "Logout": "تسجيل خروج",
+      "Your Moments, Mastered — Welcome to Momentix": "لحظاتك بأيدٍ أمينة — مرحبًا بك في Momentix",
+      "Plan, book, and celebrate unforgettable events — all in one place.": "خطط، احجز، واحتفل بأجمل اللحظات — كل ذلك في مكان واحد.",
+      "Explore Events": "استعرض الأحداث",
+      "Booked": "محجوز",
+      "Momentix. All rights reserved.": "Momentix. جميع الحقوق محفوظة.",
+      "Home": "الرئيسية",
+      "Newest First": "الأحداث الجديدة في الأول",
+      "Oldest First": "الأحداث القديمة في الأول",
+      "Previous": "السابق",
+      "Page": "صفحة",
+      "of": "من",
+      "Next": "التالي",
+      "Error loading events": "خطاء في تحميل الحدث",
+      "Technical": 'تقني',
+      "Music": 'موسيقى',
+      "Business": 'أعمال',
+      "Education": 'تعليم',
+      "Health": 'صحة',
+      "Sports": 'رياضة',
+      "Art": 'فن',
+      "Food": 'طعام',
+      "other": 'اخرى',
+      "All Categories": "جميع الفئات",
+      "Momentix. All rights reserved": "Momentix. جميع الحقوق محفوظة.",
+      "No events found": "لم يتم العثور على احداث",
+      "Category": "فئة",
+      "Description": "وصف",
+      "Venue": "مكان",
+      "Title": "عنوان",
+      "Date": "تاريخ",
+      "Price": "سعر",
+      "Add the other language manually or auto-translate using AI?": "اضافة اللغة الاخرى بشكل يدوي او ترجمة تلقائية باستخدام AI؟",
+      "Manual": "يدوي",
+      "Auto": "تلقائي",
+      "Cancel": "الغاء",
+      "Confirm": "تاكيد",
+      "Delete": "حذف",
+      "Edit": "تعديل",
+      "Delete Event?": "حذف الحدث؟",
+      "Are you sure you want to delete this event?": "هل انت متاكد من حذف هذا الحدث؟",
+      "Congratulations! Your booking was successful!": "تهانينا! تم تأكيد الحجز بنجاح!",
+      "Back to Home": "الى الرئيسية",
+      "Deleting...": "جاري الحذف..."
+
+    }
+  }
+};
+
+i18n
+  .use(LanguageDetector) 
+  .use(initReactI18next)  
+  .init({
+    resources,
+    fallbackLng: 'en', 
+    interpolation: {
+      escapeValue: false, 
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    }
+  });
+
+export default i18n;
