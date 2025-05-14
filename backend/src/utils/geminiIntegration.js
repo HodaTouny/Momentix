@@ -64,6 +64,10 @@ async function Translate(event, lang) {
     );
 
     const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      logger.error('Gemini API returned empty translation.');
+      throw new Error('Translation service failed');
+    }
     const extractField = (label) => {
       const regex = new RegExp(`${label}:\\s*(.+)`, 'i');
       const match = text.match(regex);

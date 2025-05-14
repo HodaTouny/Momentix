@@ -45,6 +45,9 @@ class AuthController {
     const lang = this.setLocale(req);
     try {
       const token = req.cookies.refresh_token;
+      if(!token) {
+        return res.status(401).json({ message: i18n.__('Unauthorized: No token provided') });
+      }
       const newAccessToken = await authService.refreshToken(token, lang);
       res.cookie('access_token', newAccessToken, accessTokenOptions);
       res.status(200).json({ accessToken: newAccessToken });
