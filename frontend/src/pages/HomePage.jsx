@@ -52,23 +52,25 @@ const HomePage = () => {
   });
 
   const { data: eventsData, isLoading, error, isFetching } = useQuery({
-    queryKey: ['events', page, orderBy, selectedCategory],
-    
-    queryFn: () => {
-      const categoryKey = selectedCategory !== 'all' ? selectedCategory : undefined;
-
+  queryKey: ['events', page, orderBy, selectedCategory],
+  queryFn: () => {
+    const categoryKey = selectedCategory !== 'all' ? selectedCategory : undefined;
     let categoryForAPI = categoryKey;
 
     if (categoryKey && isArabic) {
       const categoryObj = categories.find(cat => cat.key === categoryKey);
       if (categoryObj) {
-        categoryForAPI = categoryObj.label_ar; 
+        categoryForAPI = categoryObj.label_ar;
       }
     }
-    return eventsService.getAllEvents(page,pageSize,orderBy,categoryForAPI);
-    },
-    keepPreviousData: true,
-  });
+
+    return eventsService.getAllEvents(page, pageSize, orderBy, categoryForAPI);
+  },
+  keepPreviousData: true,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  refetchOnMount: false
+});
 
   const bookedEventIds = bookings?.map(b => b.event_id) || [];
   const events = eventsData?.data || [];

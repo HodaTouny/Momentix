@@ -34,8 +34,9 @@ export const AuthProvider = ({ children }) => {
     if(loggedUser.role === 'admin')
     {
       navigate('/dashboard');
+    }else{
+      navigate('/');
     }
-    navigate('/');
   };
   const register = async (userData) => {
     await authService.register(userData);
