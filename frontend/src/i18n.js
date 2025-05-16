@@ -57,6 +57,20 @@ const resources = {
       "Congratulations! Your booking was successful!": "Congratulations! Your booking was successful!",
       "Back to Home": "Back to Home",
       "Deleting...": "Deleting...",
+      "Edit Event": "Edit Event",
+      "Delete Event": "Delete Event",
+      "AI Translate": "AI Translate",
+      "Add Manually": "Add Manually",
+      "Expired": "Expired",
+      "Admin Dashboard": "Admin Dashboard",
+      "Total Users": "Total Users",
+      "Total Bookings": "Total Bookings",
+      "Total Events": "Total Events",
+      "Total Revenue": "Total Revenue",
+      "Bookings per Category": "Bookings per Category",
+      "Events per Category": "Events per Category",
+      "Revenue per Category": "Revenue per Category"
+
 
     }
   },
@@ -113,7 +127,21 @@ const resources = {
       "Are you sure you want to delete this event?": "هل انت متاكد من حذف هذا الحدث؟",
       "Congratulations! Your booking was successful!": "تهانينا! تم تأكيد الحجز بنجاح!",
       "Back to Home": "الى الرئيسية",
-      "Deleting...": "جاري الحذف..."
+      "Deleting...": "جاري الحذف...",
+      "Edit Event": "تعديل الحدث",
+      "Delete Event": "حذف الحدث",
+      "AI Translate": "باستخدام AI",
+      "Add Manually": "اضافة يدويا",
+      "Expired": "منتهي الصلاحية",
+      "Admin Dashboard": "لوحة تحكم المشرف",
+      "Total Users": "إجمالي المستخدمين",
+      "Total Bookings": "إجمالي الحجوزات",
+      "Total Events": "إجمالي الفعاليات",
+      "Total Revenue": "إجمالي الإيرادات",
+      "Bookings per Category": "الحجوزات حسب الفئة",
+      "Events per Category": "الفعاليات حسب الفئة",
+      "Revenue per Category": "الإيرادات حسب الفئة"
+
 
     }
   }

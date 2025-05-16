@@ -18,68 +18,77 @@ const EventDetailsPage = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [booking, setBooking] = useState(false);
 
+  // Fetch event
   const { data: event, isLoading, error } = useQuery({
     queryKey: ['event', eventId],
     queryFn: () => eventsService.getEventById(eventId),
   });
 
+  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: eventsService.deleteEvent,
+    onMutate: () => setDeleting(true),
     onSuccess: (data) => {
-      showSuccessToast(data.message || 'Event deleted successfully');
-      setShowConfirm(false);
+      showSuccessToast(data.message || t('Event deleted successfully'));
       navigate('/');
     },
     onError: () => {
-      showErrorToast('Failed to delete event');
+      showErrorToast(t('Failed to delete event'));
       setDeleting(false);
+      setShowConfirm(false);
     },
   });
 
-  const isArabic = i18n.language === 'ar';
-
   if (isLoading) return <LoadingSpinner />;
-  if (error || !event) return <p style={{ textAlign: 'center', color: 'red' }}>{t('Error loading event')}</p>;
+  if (error || !event) {
+    return (
+      <p style={{ textAlign: 'center', color: 'red' }}>
+        {t('Error loading event')}
+      </p>
+    );
+  }
 
+  // Localization & permissions
+  const isArabic = i18n.language === 'ar';
   const title = isArabic ? event.title_ar : event.title_en;
   const description = isArabic ? event.description_ar : event.description_en;
   const category = isArabic ? event.category_ar : event.category_en;
   const venue = isArabic ? event.venue_ar : event.venue_en;
+  const isAdmin = user?.role?.toLowerCase() === 'admin';
+  const isActive = event.status.toLowerCase() === 'active';
 
+  // Handlers
   const handleBook = async () => {
+    setBooking(true);
     try {
       await bookingsService.bookEvent(event.event_id);
+      showSuccessToast(t('Booking successful'));
       navigate('/booking-confirmation');
     } catch (err) {
-      showErrorToast(t('Booking failed') + ': ' + (err.response?.data?.message || err.message));
+      showErrorToast(
+        `${t('Booking failed')}: ${err.response?.data?.message || err.message}`
+      );
+    } finally {
+      setBooking(false);
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/edit-event/${event.event_id}`);
-  };
-
-  const handleDeleteClick = () => {
-    setShowConfirm(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setDeleting(true);
-    deleteMutation.mutate(event.event_id);
-  };
-
-  const isAdmin = user?.role?.toLowerCase() === 'admin';
+  const handleEdit = () => navigate(`/edit-event/${event.event_id}`);
+  const handleDeleteClick = () => setShowConfirm(true);
+  const handleConfirmDelete = () => deleteMutation.mutate(event.event_id);
 
   return (
     <div
       className="container py-5"
       style={{
         color: currentTheme.textPrimary,
-        minHeight: '100vh',
         backgroundColor: currentTheme.background,
+        minHeight: '100vh',
         padding: '2rem 1rem',
         direction: isArabic ? 'rtl' : 'ltr',
       }}
@@ -89,7 +98,7 @@ const EventDetailsPage = () => {
         style={{
           backgroundColor: currentTheme.cardBackground,
           borderRadius: '12px',
-          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
           overflow: 'hidden',
           maxWidth: '800px',
           margin: '0 auto',
@@ -99,7 +108,12 @@ const EventDetailsPage = () => {
           <img
             src={event.image || imageNotFound}
             alt={title}
-            style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+            style={{
+              width: '100%',
+              height: 'auto',
+              borderRadius: '12px',
+              objectFit: 'cover',
+            }}
           />
         </div>
 
@@ -127,7 +141,12 @@ const EventDetailsPage = () => {
 
           <div className="form-group mb-3">
             <label><strong>{t('Date')}</strong></label>
-            <input type="text" value={new Date(event.date).toLocaleDateString()} disabled className="form-control" />
+            <input
+              type="text"
+              value={new Date(event.date).toLocaleDateString()}
+              disabled
+              className="form-control"
+            />
           </div>
 
           <div className="form-group mb-3">
@@ -137,7 +156,12 @@ const EventDetailsPage = () => {
 
           <div className="form-group mb-4">
             <label><strong>{t('Price')}</strong></label>
-            <input type="text" value={`$${event.price}`} disabled className="form-control" />
+            <input
+              type="text"
+              value={`EGP ${event.price}`}
+              disabled
+              className="form-control"
+            />
           </div>
 
           {/* Action Buttons */}
@@ -147,14 +171,34 @@ const EventDetailsPage = () => {
                 <Button variant="primary" onClick={handleEdit}>
                   {t('Edit Event')}
                 </Button>
-                <Button variant="danger" onClick={handleDeleteClick} disabled={deleting}>
+                <Button
+                  variant="danger"
+                  onClick={handleDeleteClick}
+                  disabled={deleting}
+                >
                   {deleting ? t('Deleting...') : t('Delete Event')}
                 </Button>
               </>
-            ) : (
-              <Button style={{ minWidth: '200px' }} onClick={handleBook}>
-                {t('Book Now')}
+            ) : isActive ? (
+              <Button
+                style={{ minWidth: '200px' }}
+                onClick={handleBook}
+                disabled={booking}
+              >
+                {booking ? t('Booking...') : t('Book Now')}
               </Button>
+            ) : (
+              <div
+                style={{
+                  backgroundColor: currentTheme.primaryHover,
+                  color: currentTheme.buttonText,
+                  padding: '0.6rem 1rem',
+                  borderRadius: '8px',
+                  fontWeight: 'bold',
+                }}
+              >
+                {t('Expired')}
+              </div>
             )}
           </div>
         </div>

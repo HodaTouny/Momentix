@@ -53,7 +53,7 @@ const EventForm = ({ mode = 'create', initialValues = {}, onSubmit }) => {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const isArabicText = (text) => /^[\u0600-\u06FF\s]+$/.test(text.trim());
+  const isArabicText = (text) => /^[\u0600-\u06FF\s.,؟،!؟'"-]+$/.test(text.trim());
   const isEnglishText = (text) => /^[A-Za-z0-9\s.,!?'"-]+$/.test(text.trim());
 
   const validate = () => {
@@ -165,7 +165,8 @@ const EventForm = ({ mode = 'create', initialValues = {}, onSubmit }) => {
           name="image" 
           accept="image/*" 
           onChange={handleChange} 
-          className={`form-control mt-2 ${errors.image ? 'is-invalid' : ''}`} 
+          className={`form-control mt-2 ${errors.image ? 'is-invalid' : ''}`
+        } 
         />
         {errors.image && <div className="invalid-feedback d-block">{errors.image}</div>}
       </div>
@@ -192,10 +193,11 @@ const EventForm = ({ mode = 'create', initialValues = {}, onSubmit }) => {
       {/* Other language fields if manual */}
       {addOtherLang === 'manual' && (
         <>
-          {[ 
+          {[
             { label: isArabic ? t('Title (English)') : t('Title (Arabic)'), name: isArabic ? 'title_en' : 'title_ar', type: 'text' },
             { label: isArabic ? t('Description (English)') : t('Description (Arabic)'), name: isArabic ? 'description_en' : 'description_ar', type: 'textarea' },
             { label: isArabic ? t('Venue (English)') : t('Venue (Arabic)'), name: isArabic ? 'venue_en' : 'venue_ar', type: 'text' },
+            { label: isArabic ? t('Category (English)') : t('Category (Arabic)'), name: isArabic ? 'category_en' : 'category_ar', type: 'text' },
           ].map(({ label, name, type }) => (
             <div className="form-group mb-3" key={name}>
               <label><strong>{label}</strong></label>

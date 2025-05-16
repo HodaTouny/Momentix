@@ -34,5 +34,6 @@
 	"Event booked successfully": "Event booked successfully",
 	"Database error": " %s",
 	"Access token refreshed successfully": "Access token refreshed successfully",
-	"Error in request body": " %s"
+	"Error in request body": " %s",
+	"Record": "Record"
 }

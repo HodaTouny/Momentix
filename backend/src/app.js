@@ -9,6 +9,8 @@ const limiter = require('./config/RateLimiter');
 const corsOptions = require('./config/cors');
 const logger = require('./lib/logger');
 const routes = require('./routes');
+const startEventStatusCron = require('./jobs/oldEvents');
+
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use(express.json({ limit: '30kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 app.use(helmet());
+
+startEventStatusCron();
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);

@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
 import imageNotFound from '../../assests/imageNotFound.jpg';
-import { FaEdit, FaTrash } from 'react-icons/fa'; 
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const EventCard = ({ event, onBook, isBooked, onDelete }) => {
   const { currentTheme } = useDarkMode();
@@ -17,6 +17,7 @@ const EventCard = ({ event, onBook, isBooked, onDelete }) => {
   const title = isArabic ? event.title_ar : event.title_en;
   const venue = isArabic ? event.venue_ar : event.venue_en;
   const isAdmin = user?.role?.toLowerCase() === 'admin';
+  const isActive = event.status.toLowerCase() === 'active';
 
   const handleEdit = (e) => {
     e.stopPropagation();
@@ -25,7 +26,7 @@ const EventCard = ({ event, onBook, isBooked, onDelete }) => {
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
-    onDelete(event.event_id); 
+    onDelete(event.event_id);
   };
 
   const handleCardClick = () => {
@@ -59,7 +60,15 @@ const EventCard = ({ event, onBook, isBooked, onDelete }) => {
         />
       </div>
 
-      <div style={{ padding: '1rem', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          padding: '1rem',
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
         <div>
           <h5 style={{ marginBottom: '0.5rem', fontWeight: 'bold' }}>{title}</h5>
           <p style={{ color: currentTheme.textSecondary, fontSize: '0.9rem', marginBottom: '0.3rem' }}>
@@ -68,47 +77,59 @@ const EventCard = ({ event, onBook, isBooked, onDelete }) => {
           <p style={{ color: currentTheme.textSecondary, fontSize: '0.9rem', marginBottom: '0.3rem' }}>
             {venue}
           </p>
-          <p style={{ fontWeight: '600', marginBottom: '1rem' }}>${event.price}</p>
+          <p style={{ fontWeight: '600', marginBottom: '1rem' }}>EGP {event.price}</p>
         </div>
 
         {isAdmin ? (
           <div className="d-flex justify-content-end gap-3" onClick={(e) => e.stopPropagation()}>
-            <FaEdit 
-              onClick={handleEdit} 
+            <FaEdit
+              onClick={handleEdit}
               style={{ cursor: 'pointer', fontSize: '2rem', color: currentTheme.primary }}
               title={t('Edit')}
             />
-            <FaTrash 
-              onClick={handleDeleteClick} 
+            <FaTrash
+              onClick={handleDeleteClick}
               style={{ cursor: 'pointer', fontSize: '2rem', color: currentTheme.primary }}
               title={t('Delete')}
             />
           </div>
+        ) : isBooked ? (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: currentTheme.primaryHover,
+              color: currentTheme.buttonText,
+              padding: '0.5rem',
+              borderRadius: '8px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('Booked')}
+          </div>
+        ) : isActive ? (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onBook(event.event_id);
+            }}
+          >
+                {t('Book Now')}
+          </Button>
         ) : (
-          isBooked ? (
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                backgroundColor: currentTheme.primaryHover,
-                color: currentTheme.buttonText,
-                padding: '0.5rem',
-                borderRadius: '8px',
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}
-            >
-              {t('Booked')}
-            </div>
-          ) : (
-            <Button 
-              onClick={(e) => {
-                e.stopPropagation();
-                onBook(event.event_id);
-              }}
-            >
-              {t('Book Now')}
-            </Button>
-          )
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: currentTheme.primaryHover,
+              color: currentTheme.buttonText,
+              padding: '0.5rem',
+              borderRadius: '8px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('Expired')}
+          </div>
         )}
       </div>
     </div>

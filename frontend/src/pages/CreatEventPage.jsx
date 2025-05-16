@@ -23,22 +23,34 @@ const CreateEventPage = () => {
     }
   });
 
-  const handleCreate = (formData) => {
-  const data = new FormData();
-  for (const key in formData) {
-    if (formData[key] !== undefined && formData[key] !== null) {
-      data.append(key, formData[key]);
+const handleCreate = (formData) => {
+  return new Promise((resolve, reject) => { 
+    const data = new FormData();
+    for (const key in formData) {
+      if (formData[key] !== undefined && formData[key] !== null) {
+        data.append(key, formData[key]);
+      }
     }
-  }
-  data.append('created_by', user.user_id);
-   mutation.mutate(data);
-  };
+    data.append('created_by', user.user_id);
+
+    mutation.mutate(data, {
+      onSuccess: () => {
+        navigate('/#events');
+        resolve(); 
+      },
+      onError: (error) => {
+        console.error(error);
+        reject(error); 
+      }
+    });
+  });
+};
+
 
   if (mutation.isLoading) return <LoadingSpinner />;
 
   return (
     <div className="container py-5">
-      <h2>Create New Event</h2>
       <EventForm mode="create" onSubmit={handleCreate} />
     </div>
   );

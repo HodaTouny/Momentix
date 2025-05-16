@@ -52,9 +52,9 @@ const LoginPage = () => {
     try {
       await login(formData);
       showSuccessToast(t('Login successful!'));
-      navigate('/');
     } catch (err) {
       showErrorToast(err.response?.data?.message || t('Login failed'));
+      
     } finally {
       setLoading(false);
     }

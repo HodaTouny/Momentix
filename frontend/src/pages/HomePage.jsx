@@ -24,10 +24,14 @@ const HomePage = () => {
   const [orderBy, setOrderBy] = useState(["date_DESC"]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [eventToDelete, setEventToDelete] = useState(null); 
-  const pageSize = 6;
 
   const isAdmin = user?.role?.toLowerCase() === 'admin';
   const isArabic = i18n.language === 'ar';
+  let pageSize = 6;
+  if(isAdmin) {
+    pageSize = 9;
+  }
+
 
   const categories = [
     { key: "Technical", label_en: "Technical", label_ar: "تقني" },
@@ -49,7 +53,20 @@ const HomePage = () => {
 
   const { data: eventsData, isLoading, error, isFetching } = useQuery({
     queryKey: ['events', page, orderBy, selectedCategory],
-    queryFn: () => eventsService.getAllEvents(page, pageSize, orderBy, selectedCategory !== 'all' ? selectedCategory : undefined),
+    
+    queryFn: () => {
+      const categoryKey = selectedCategory !== 'all' ? selectedCategory : undefined;
+
+    let categoryForAPI = categoryKey;
+
+    if (categoryKey && isArabic) {
+      const categoryObj = categories.find(cat => cat.key === categoryKey);
+      if (categoryObj) {
+        categoryForAPI = categoryObj.label_ar; 
+      }
+    }
+    return eventsService.getAllEvents(page,pageSize,orderBy,categoryForAPI);
+    },
     keepPreviousData: true,
   });
 
@@ -111,6 +128,7 @@ const HomePage = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
+  if (deleteMutation.isLoading) return <LoadingSpinner />;
   if (error) {
     return (
       <div className="container py-5 text-center" style={{ color: 'red' }}>
@@ -121,7 +139,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <HeroComponent />
+      {!isAdmin && <HeroComponent />}
       <div id="events">
         {/* Filters */}
         <div className="container py-4 d-flex flex-wrap gap-3 justify-content-end" style={{ direction: isArabic ? 'rtl' : 'ltr' }}>

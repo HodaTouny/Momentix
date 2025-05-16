@@ -12,6 +12,7 @@ import CreateEventPage from "./pages/CreatEventPage";
 import ProtectedRoute from "./ProtectedRoute";
 import { useAuth } from './contexts/AuthContext';
 import LoadingSpinner from "./components/common/LoadingSpinner";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 function App() {
   const { loading } = useAuth();
@@ -40,6 +41,14 @@ function App() {
             element={
               <ProtectedRoute adminOnly={true}>
                 <CreateEventPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboardPage />
               </ProtectedRoute>
             }
           />

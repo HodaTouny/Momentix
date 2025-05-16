@@ -27,13 +27,28 @@ const EditEventPage = () => {
     }
   });
 
-  const handleEdit = (formData) => {
+ const handleEdit = (formData) => {
+  return new Promise((resolve, reject) => {
     const updatedData = new FormData();
     for (const key in formData) {
       updatedData.append(key, formData[key]);
     }
-    mutation.mutate({ id: eventId, updatedData });
-  };
+    mutation.mutate(
+      { id: eventId, updatedData },
+      {
+        onSuccess: () => {
+          navigate('/#events');
+          resolve(); 
+        },
+        onError: (error) => {
+          console.error(error);
+          reject(error); 
+        }
+      }
+    );
+  });
+};
+
 
   if (isLoading) return <LoadingSpinner />;
   if (error || !eventData) return <p style={{ textAlign: 'center', color: 'red' }}>Error loading event details.</p>;

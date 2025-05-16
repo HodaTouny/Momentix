@@ -35,8 +35,8 @@ model Event {
   image          String?
   public_id      String?
   created_at     DateTime  @default(now())
+  status String  @default("Active")
   created_by     Int
-
   creator        User      @relation("UserCreatedEvents", fields: [created_by], references: [user_id])
   bookings       Booking[]
 

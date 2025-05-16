@@ -62,12 +62,22 @@ const Navbar = () => {
                       </li>
                       <li>
                         <a 
-                          href="/#events" 
+                          href="/" 
                           className="dropdown-item" 
                           onClick={() => setDropdownOpen(false)}
                           style={{ textDecoration: 'none' }}
                         >
                           {t('View Events')}
+                        </a>
+                      </li>
+                      <li>
+                        <a 
+                          href="/dashboard" 
+                          className="dropdown-item" 
+                          onClick={() => setDropdownOpen(false)}
+                          style={{ textDecoration: 'none' }}
+                        >
+                          {t('Dashboard')}
                         </a>
 
                       </li>
