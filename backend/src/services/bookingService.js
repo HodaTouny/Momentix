@@ -3,6 +3,7 @@ const logger = require('../lib/logger');
 const i18n = require('../config/i18n');
 const { handlePrismaError } = require('../utils/Errors/prismaErrors');
 const { CustomError } = require('../utils/Errors/customErrors');
+const {invalidateDashboardCache, deleteEventCache} = require('../utils/redisInvalidate')
 
 class BookingService {
   async book(userId, eventId, lang) {
@@ -21,6 +22,9 @@ class BookingService {
         throw new CustomError(i18n.__("You can't book a past event"), 400);
       }
       const booking = await prisma.booking.create({data: {user_id: userId,event_id: eventId} });
+      await invalidateDashboardCache();
+      await deleteEventCache();
+    
       return booking;
     } catch (error) {
       logger.error(error);

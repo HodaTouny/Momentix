@@ -11,7 +11,7 @@ import EventCard from '../components/eventCard/eventCard';
 import HeroComponent from '../components/hero/Hero';
 import Button from '../components/common/Button';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import ConfirmModal from '../components/common/ConfirmModal'; 
+import ConfirmModal from '../components/common/ConfirmModal';
 
 const HomePage = () => {
   const { currentTheme } = useDarkMode();
@@ -21,58 +21,51 @@ const HomePage = () => {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(1);
-  const [orderBy, setOrderBy] = useState(["date_DESC"]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [eventToDelete, setEventToDelete] = useState(null); 
+  const [orderBy, setOrderBy] = useState(['date_DESC']);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   const isAdmin = user?.role?.toLowerCase() === 'admin';
   const isArabic = i18n.language === 'ar';
-  let pageSize = 6;
-  if(isAdmin) {
-    pageSize = 9;
-  }
-
+  const pageSize = isAdmin ? 9 : 6;
 
   const categories = [
-    { key: "Technical", label_en: "Technical", label_ar: "تقني" },
-    { key: "Music", label_en: "Music", label_ar: "موسيقى" },
-    { key: "Business", label_en: "Business", label_ar: "أعمال" },
-    { key: "Education", label_en: "Education", label_ar: "تعليم" },
-    { key: "Health", label_en: "Health", label_ar: "صحة" },
-    { key: "Sports", label_en: "Sports", label_ar: "رياضة" },
-    { key: "Art", label_en: "Art", label_ar: "فن" },
-    { key: "Food", label_en: "Food", label_ar: "طعام" },
-    { key: "Other", label_en: "Other", label_ar: "اخرى" },
+    { key: 'Technical', label_en: 'Technical', label_ar: 'تقني' },
+    { key: 'Music', label_en: 'Music', label_ar: 'موسيقى' },
+    { key: 'Business', label_en: 'Business', label_ar: 'أعمال' },
+    { key: 'Education', label_en: 'Education', label_ar: 'تعليم' },
+    { key: 'Health', label_en: 'Health', label_ar: 'صحة' },
+    { key: 'Sports', label_en: 'Sports', label_ar: 'رياضة' },
+    { key: 'Art', label_en: 'Art', label_ar: 'فن' },
+    { key: 'Food', label_en: 'Food', label_ar: 'طعام' },
+    { key: 'Other', label_en: 'Other', label_ar: 'اخرى' },
   ];
 
   const { data: bookings = [], refetch: refetchBookings } = useQuery({
     queryKey: ['bookings'],
     queryFn: bookingsService.getAllBookings,
-    enabled: !!user && !isAdmin, 
+    enabled: !!user && !isAdmin,
   });
 
   const { data: eventsData, isLoading, error, isFetching } = useQuery({
-  queryKey: ['events', page, orderBy, selectedCategory],
-  queryFn: () => {
-    const categoryKey = selectedCategory !== 'all' ? selectedCategory : undefined;
-    let categoryForAPI = categoryKey;
+    queryKey: ['events', page, orderBy, selectedCategory],
+    queryFn: () => {
+      let categoryParam = selectedCategory !== 'all' ? selectedCategory : undefined;
 
-    if (categoryKey && isArabic) {
-      const categoryObj = categories.find(cat => cat.key === categoryKey);
-      if (categoryObj) {
-        categoryForAPI = categoryObj.label_ar;
+      if (categoryParam && isArabic) {
+        const found = categories.find((cat) => cat.key === categoryParam);
+        if (found) categoryParam = found.label_ar;
       }
-    }
 
-    return eventsService.getAllEvents(page, pageSize, orderBy, categoryForAPI);
-  },
-  keepPreviousData: true,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-  refetchOnMount: false
-});
+      return eventsService.getAllEvents(page, pageSize, orderBy, categoryParam);
+    },
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: true,
+  });
 
-  const bookedEventIds = bookings?.map(b => b.event_id) || [];
+  const bookedEventIds = bookings?.map((b) => b.event_id) || [];
   const events = eventsData?.data || [];
   const totalEvents = eventsData?.total || 0;
   const totalPages = Math.ceil(totalEvents / pageSize);
@@ -85,30 +78,30 @@ const HomePage = () => {
     },
     onError: () => {
       showErrorToast('Failed to book event');
-    }
+    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: eventsService.deleteEvent,
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       showSuccessToast(data.message || 'Event deleted successfully');
-      queryClient.invalidateQueries(['events']);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError: () => {
       showErrorToast('Failed to delete event');
-    }
+    },
   });
 
   const handleDelete = (eventId) => {
-    if (!user || user.role.toLowerCase() !== 'admin') return;
+    if (!isAdmin) return;
     setEventToDelete(eventId);
   };
 
   const handleConfirmDelete = () => {
-    if (!eventToDelete) return;
-    const idToDelete = eventToDelete;
-    setEventToDelete(null); 
-    deleteMutation.mutate(idToDelete);
+    if (eventToDelete) {
+      deleteMutation.mutate(eventToDelete);
+      setEventToDelete(null);
+    }
   };
 
   const handleBook = (eventId) => {
@@ -120,7 +113,7 @@ const HomePage = () => {
   };
 
   const handleOrderChange = (e) => {
-    setOrderBy(e.target.value === 'newest' ? ["date_DESC"] : ["date_ASC"]);
+    setOrderBy(e.target.value === 'newest' ? ['date_DESC'] : ['date_ASC']);
     setPage(1);
   };
 
@@ -129,8 +122,8 @@ const HomePage = () => {
     setPage(1);
   };
 
-  if (isLoading) return <LoadingSpinner />;
-  if (deleteMutation.isLoading) return <LoadingSpinner />;
+  if (isLoading || deleteMutation.isLoading) return <LoadingSpinner />;
+
   if (error) {
     return (
       <div className="container py-5 text-center" style={{ color: 'red' }}>
@@ -145,7 +138,7 @@ const HomePage = () => {
       <div id="events">
         {/* Filters */}
         <div className="container py-4 d-flex flex-wrap gap-3 justify-content-end" style={{ direction: isArabic ? 'rtl' : 'ltr' }}>
-          <select onChange={handleOrderChange} value={orderBy[0] === "date_DESC" ? "newest" : "oldest"}
+          <select onChange={handleOrderChange} value={orderBy[0] === 'date_DESC' ? 'newest' : 'oldest'}
             style={{ backgroundColor: currentTheme.cardBackground, color: currentTheme.textPrimary, border: `1px solid ${currentTheme.borderColor}`, padding: '0.5rem 1rem', borderRadius: '8px' }}>
             <option value="newest">{t('Newest First')}</option>
             <option value="oldest">{t('Oldest First')}</option>
@@ -154,19 +147,20 @@ const HomePage = () => {
           <select onChange={handleCategoryChange} value={selectedCategory}
             style={{ backgroundColor: currentTheme.cardBackground, color: currentTheme.textPrimary, border: `1px solid ${currentTheme.borderColor}`, padding: '0.5rem 1rem', borderRadius: '8px' }}>
             <option value="all">{isArabic ? 'كل الفئات' : 'All Categories'}</option>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <option key={cat.key} value={cat.key}>
                 {isArabic ? cat.label_ar : cat.label_en}
               </option>
             ))}
           </select>
         </div>
+        
 
         {/* Events Grid */}
         <div className="container py-3">
           <div className="row">
             {events.length > 0 ? (
-              events.map(event => (
+              events.map((event) => (
                 <div key={event.event_id} className="col-md-4 mb-4 d-flex">
                   <EventCard
                     event={event}
@@ -186,13 +180,13 @@ const HomePage = () => {
 
         {/* Pagination */}
         <div className="container py-4 d-flex justify-content-between align-items-center">
-          <Button variant="secondary" onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1 || isFetching}>
+          <Button variant="secondary" onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1 || isFetching}>
             {t('Previous')}
           </Button>
           <span style={{ color: currentTheme.textPrimary }}>
             {t('Page')} {page} {t('of')} {totalPages}
           </span>
-          <Button onClick={() => setPage(p => (p < totalPages ? p + 1 : p))} disabled={page === totalPages || isFetching}>
+          <Button onClick={() => setPage((p) => (p < totalPages ? p + 1 : p))} disabled={page === totalPages || isFetching}>
             {t('Next')}
           </Button>
         </div>

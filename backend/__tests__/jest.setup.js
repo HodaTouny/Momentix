@@ -37,6 +37,12 @@ const mockReqWithLang = (body = {}, lang = 'en', token = 'Bearer test_token', co
   cookies,  
 });
 
+jest.mock('../src/lib/redis', () => ({
+  get: jest.fn().mockResolvedValue(null), 
+  set: jest.fn().mockResolvedValue(true),
+  del: jest.fn().mockResolvedValue(1),
+}));
+
 
 global.mockRes = mockRes;
 global.mockReqWithLang = mockReqWithLang;

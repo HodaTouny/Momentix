@@ -69,7 +69,10 @@ const resources = {
       "Total Revenue": "Total Revenue",
       "Bookings per Category": "Bookings per Category",
       "Events per Category": "Events per Category",
-      "Revenue per Category": "Revenue per Category"
+      "Revenue per Category": "Revenue per Category",
+      "All Events":"All Events",
+      "Upcoming" :"Upcoming",
+      "Expired":"Expired"
 
 
     }
@@ -140,7 +143,10 @@ const resources = {
       "Total Revenue": "إجمالي الإيرادات",
       "Bookings per Category": "الحجوزات حسب الفئة",
       "Events per Category": "الفعاليات حسب الفئة",
-      "Revenue per Category": "الإيرادات حسب الفئة"
+      "Revenue per Category": "الإيرادات حسب الفئة",
+      "All Events":"كل الفاعليات",
+      "Upcoming" :"القادمة",
+      "Expired":"الفائتة"
 
 
     }
