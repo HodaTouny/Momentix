@@ -14,11 +14,7 @@ const authService = {
     await apiClient.get('/api/auth/logout');
   },
   getCurrentUser: async () => {
-    const { data } = await apiClient.get('/api/auth/me',
-{      
-  withCredentials: true,
-  }
-    );
+    const { data } = await apiClient.get('/api/auth/me');
     return data.user;
   }
 };
