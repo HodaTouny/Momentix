@@ -58,8 +58,15 @@ class AuthController {
 
   async logout(req, res) {
     const lang = this.setLocale(req);
-    res.clearCookie('access_token');
-    res.clearCookie('refresh_token');
+    res.clearCookie('access_token', {
+    ...accessTokenOptions,
+    maxAge: 0,
+  });
+
+  res.clearCookie('refresh_token', {
+    ...refreshTokenOptions,
+    maxAge: 0,
+  });
     res.status(200).json({ message: i18n.__('Logged out successfully') });
   }
 
