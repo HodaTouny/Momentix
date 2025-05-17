@@ -1,7 +1,7 @@
 const cors = require('cors');
 require('dotenv').config();
 const corsOptions = cors.CorsOptions = {
-  origin: `${process.env.FRONTEND_URL}`,
+  origin: `https://atc-01060584671-1.onrender.com`,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, 
