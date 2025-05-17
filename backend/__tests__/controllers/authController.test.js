@@ -1,8 +1,23 @@
 const authController = require('../../src/controllers/authController');
 const authService = require('../../src/services/authService');
 const { CustomError } = require('../../src/utils/Errors/customErrors');
-const i18n = require('../../src/config/i18n'); 
+const i18n = require('../../src/config/i18n');
 jest.mock('../../src/services/authService');
+jest.mock('../../src/config/i18n');
+
+const mockRes = () => {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  res.cookie = jest.fn().mockReturnValue(res);
+  res.clearCookie = jest.fn().mockReturnValue(res);
+  return res;
+};
+
+const mockReqWithLang = (body = {}) => ({
+  body,
+  headers: { 'accept-language': 'en' }
+});
 
 describe('AuthController', () => {
   afterEach(() => {
@@ -49,8 +64,6 @@ describe('AuthController', () => {
       const req = mockReqWithLang({ email: 'john@example.com', password: 'secret' });
       const res = mockRes();
 
-      res.cookie = jest.fn();
-
       authService.login.mockResolvedValue({
         message: 'Login successful',
         accessToken: 'access_token',
@@ -64,16 +77,17 @@ describe('AuthController', () => {
       expect(res.cookie).toHaveBeenCalledWith('access_token', 'access_token', expect.any(Object));
       expect(res.cookie).toHaveBeenCalledWith('refresh_token', 'refresh_token', expect.any(Object));
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ 
+      expect(res.json).toHaveBeenCalledWith({
         message: 'Login successful',
         accessToken: 'access_token',
         refreshToken: 'refresh_token'
-       });
+      });
     });
 
     it('should handle login errors', async () => {
       const req = mockReqWithLang({ email: 'fail@example.com', password: 'badpass' });
       const res = mockRes();
+
       authService.login.mockImplementation(() => {
         throw new CustomError('Invalid credentials', 401);
       });
@@ -89,7 +103,6 @@ describe('AuthController', () => {
     it('should return new access token', async () => {
       const req = { cookies: { refresh_token: 'old_token' }, headers: { 'accept-language': 'en' } };
       const res = mockRes();
-      res.cookie = jest.fn();
 
       authService.refreshToken.mockResolvedValue('new_access_token');
 
@@ -103,6 +116,7 @@ describe('AuthController', () => {
     it('should handle refresh token failure', async () => {
       const req = { cookies: { refresh_token: 'bad_token' }, headers: { 'accept-language': 'en' } };
       const res = mockRes();
+
       authService.refreshToken.mockImplementation(() => {
         throw new CustomError('Invalid refresh token', 403);
       });
@@ -118,13 +132,21 @@ describe('AuthController', () => {
     it('should clear cookies and return logout message', async () => {
       const req = { headers: { 'accept-language': 'en' } };
       const res = mockRes();
-      res.clearCookie = jest.fn();
+
       i18n.__.mockReturnValue('Logged out successfully');
 
       await authController.logout(req, res);
 
-      expect(res.clearCookie).toHaveBeenCalledWith('access_token');
-      expect(res.clearCookie).toHaveBeenCalledWith('refresh_token');
+      expect(res.clearCookie).toHaveBeenCalledWith(
+        'access_token',
+        expect.objectContaining({ maxAge: 0 })
+      );
+
+      expect(res.clearCookie).toHaveBeenCalledWith(
+        'refresh_token',
+        expect.objectContaining({ maxAge: 0 })
+      );
+
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'Logged out successfully' });
     });
