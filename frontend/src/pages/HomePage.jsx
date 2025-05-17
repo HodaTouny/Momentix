@@ -86,15 +86,18 @@ const HomePage = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: eventsService.deleteEvent,
-    onSuccess: (data) => {
-      showSuccessToast(data.message || 'Event deleted successfully');
-      queryClient.invalidateQueries({ queryKey: ['events'] });
-    },
-    onError: () => {
-      showErrorToast('Failed to delete event');
-    },
-  });
+  mutationFn: eventsService.deleteEvent,
+  onSuccess: async (data) => {
+    showSuccessToast(data.message || 'Event deleted successfully');
+    await queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey[0] === 'events',
+    });
+  },
+  onError: () => {
+    showErrorToast('Failed to delete event');
+  },
+});
+
 
   const handleDelete = (eventId) => {
     if (!isAdmin) return;

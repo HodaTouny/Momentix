@@ -19,15 +19,21 @@ const EditEventPage = () => {
   const mutation = useMutation({
     mutationFn: ({ id, updatedData }) => eventsService.updateEvent(id, updatedData),
     onSuccess: async () => {
-      showSuccessToast('Event created successfully');
+    showSuccessToast('Event created successfully');
 
-      await queryClient.invalidateQueries({ queryKey: ['events'] });
-      await queryClient.refetchQueries({
-        queryKey: ['events', 1],
-        exact: false,
-      });
-      navigate('/'); 
-    },
+    await queryClient.invalidateQueries({
+      predicate: (query) => query.queryKey[0] === 'events',
+    });
+
+    await new Promise((res) => setTimeout(res, 200));
+
+    await queryClient.refetchQueries({
+      predicate: (query) => query.queryKey[0] === 'events',
+    });
+
+  navigate('/');
+}
+,
     onError: (error) => {
       console.error(error);
       showErrorToast('Failed to update event');

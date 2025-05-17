@@ -197,7 +197,6 @@ const EventForm = ({ mode = 'create', initialValues = {}, onSubmit }) => {
             { label: isArabic ? t('Title (English)') : t('Title (Arabic)'), name: isArabic ? 'title_en' : 'title_ar', type: 'text' },
             { label: isArabic ? t('Description (English)') : t('Description (Arabic)'), name: isArabic ? 'description_en' : 'description_ar', type: 'textarea' },
             { label: isArabic ? t('Venue (English)') : t('Venue (Arabic)'), name: isArabic ? 'venue_en' : 'venue_ar', type: 'text' },
-            { label: isArabic ? t('Category (English)') : t('Category (Arabic)'), name: isArabic ? 'category_en' : 'category_ar', type: 'text' },
           ].map(({ label, name, type }) => (
             <div className="form-group mb-3" key={name}>
               <label><strong>{label}</strong></label>

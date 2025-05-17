@@ -26,6 +26,7 @@ class EventService {
     filters = processFilters(filters);
     const cached = await redis.get(cacheKey);
     if (cached) return JSON.parse(cached);
+    console.log("")
 
     if (include) include = parseInclude(include);
     const options = { where: filters, include, orderBy };
@@ -66,11 +67,7 @@ class EventService {
       });
 
       await invalidateDashboardCache();
-      try {
-        await deleteEventCache();
-      } catch (err) {
-        logger.error('Failed to delete event cache:', err);
-      }
+      await deleteEventCache();
 
       return updatedEvent;
     } catch (error) {
@@ -101,11 +98,7 @@ class EventService {
       });
 
       await invalidateDashboardCache();
-      try {
-        await deleteEventCache();
-      } catch (err) {
-        logger.error('Failed to delete event cache:', err);
-      }
+      await deleteEventCache();
 
       return updatedEvent;
     } catch (error) {

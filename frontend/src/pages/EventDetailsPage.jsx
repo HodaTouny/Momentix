@@ -53,7 +53,6 @@ const EventDetailsPage = () => {
     );
   }
 
-  // Localization & permissions
   const isArabic = i18n.language === 'ar';
   const title = isArabic ? event.title_ar : event.title_en;
   const description = isArabic ? event.description_ar : event.description_en;
@@ -62,12 +61,10 @@ const EventDetailsPage = () => {
   const isAdmin = user?.role?.toLowerCase() === 'admin';
   const isActive = event.status.toLowerCase() === 'active';
 
-  // Handlers
   const handleBook = async () => {
     setBooking(true);
     try {
       await bookingsService.bookEvent(event.event_id);
-      showSuccessToast(t('Booking successful'));
       navigate('/booking-confirmation');
     } catch (err) {
       showErrorToast(

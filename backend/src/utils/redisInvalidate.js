@@ -1,6 +1,7 @@
 const redis = require('../lib/redis');
-const logger = require('../lib/logger')
+const logger = require('../lib/logger');
 
+// Invalidate fixed dashboard keys
 async function invalidateDashboardCache() {
   const keys = [
     'dashboard:summary',
@@ -12,30 +13,37 @@ async function invalidateDashboardCache() {
     'dashboard:revenue:ar',
   ];
 
-  await Promise.all(keys.map((key) => redis.del(key)));
+  try {
+    const result = await Promise.all(keys.map((key) => redis.del(key)));
+    logger.info(`Deleted dashboard cache keys: ${keys.join(', ')}`);
+  } catch (err) {
+    logger.error('Error deleting dashboard cache:', err);
+  }
 }
 
 async function deleteEventCache() {
   let cursor = '0';
+  let deletedCount = 0;
 
   try {
     do {
       const { cursor: nextCursor, keys } = await redis.scan(cursor, {
         MATCH: 'events:*',
-        COUNT: 100
+        COUNT: 100,
       });
 
       if (Array.isArray(keys) && keys.length > 0) {
         await redis.del(...keys);
-        logger.info('Deleting Redis keys:', keys);
+        deletedCount += keys.length;
       }
 
       cursor = nextCursor;
     } while (cursor !== '0');
+
+    logger.info(`Deleted ${deletedCount} Redis event cache keys.`);
   } catch (err) {
     logger.error('Error deleting event cache:', err);
   }
 }
-
 
 module.exports = { invalidateDashboardCache, deleteEventCache };
