@@ -10,46 +10,49 @@ const redis = require('../lib/redis');
 
 class EventService {
   async getEvents(query, lang) {
-    i18n.setLocale(lang);
-    try {
-      let { page, pageSize, include, orderBy, ...filters } = query;
+  i18n.setLocale(lang);
+  try {
+    let { page, pageSize, include, orderBy, ...filters } = query;
 
-      const category = query.category_en || query.category_ar || null;
-      if (orderBy) orderBy = parseOrderBy(orderBy);
-      const orderKey = orderBy[0].date
-      console.log(orderKey)
-      const cacheKey = `events:page=${page}&size=${pageSize}&order=${orderKey}&cat_en=${category || 'all'}`;
-      filters = processFilters(filters);
-      const cached = await redis.get(cacheKey);
-      if (cached) return JSON.parse(cached);
+    const category = query.category_en || query.category_ar || 'all';
+    const status = query.status || 'all';
 
-      if (include) include = parseInclude(include);
-    
-      const options = { where: filters, include, orderBy };
-      const pageNum = parseInt(page, 10);
-      const size = parseInt(pageSize, 10);
 
-      if (page && pageSize) {
-        const skip = (pageNum - 1) * size;
-        const take = size;
-        const [data, total] = await Promise.all([
-          prisma.event.findMany({ ...options, skip, take }),
-          prisma.event.count({ where: filters }),
-        ]);
+    if (orderBy) orderBy = parseOrderBy(orderBy);
+    const orderKey = orderBy?.[0]?.date || 'default';
 
-        const result = { data, total, page: pageNum, pageSize: size };
-        await redis.set(cacheKey, JSON.stringify(result), 'EX', 600);
-        return result;
-      } else {
-        const data = await prisma.event.findMany(options);
-        await redis.set(cacheKey, JSON.stringify(data), 'EX', 600);
-        return data;
-      }
-    } catch (error) {
-      logger.error(error);
-      handlePrismaError(error, i18n.__('Event'));
+    const cacheKey = `events:page=${page}&size=${pageSize}&order=${orderKey}&cat=${category}&status=${status}`;
+
+    filters = processFilters(filters);
+    const cached = await redis.get(cacheKey);
+    if (cached) return JSON.parse(cached);
+
+    if (include) include = parseInclude(include);
+    const options = { where: filters, include, orderBy };
+    const pageNum = parseInt(page, 10);
+    const size = parseInt(pageSize, 10);
+    let result;
+    if (page && pageSize) {
+      const skip = (pageNum - 1) * size;
+      const take = size;
+      const [data, total] = await Promise.all([
+        prisma.event.findMany({ ...options, skip, take }),
+        prisma.event.count({ where: filters }),
+      ]);
+      result = { data, total, page: pageNum, pageSize: size };
+    } else {
+      const data = await prisma.event.findMany(options);
+      result = data;
     }
+
+    await redis.set(cacheKey, JSON.stringify(result), 'EX', 600);
+    return result;
+  } catch (error) {
+    logger.error(error);
+    handlePrismaError(error, i18n.__('Event'));
   }
+}
+
 
   async createEvent(data, lang) {
     i18n.setLocale(lang);

@@ -23,6 +23,7 @@ const HomePage = () => {
   const [page, setPage] = useState(1);
   const [orderBy, setOrderBy] = useState(['date_DESC']);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const [eventToDelete, setEventToDelete] = useState(null);
 
   const isAdmin = user?.role?.toLowerCase() === 'admin';
@@ -48,17 +49,20 @@ const HomePage = () => {
   });
 
   const { data: eventsData, isLoading, error, isFetching } = useQuery({
-    queryKey: ['events', page, orderBy, selectedCategory],
-    queryFn: () => {
-      let categoryParam = selectedCategory !== 'all' ? selectedCategory : undefined;
+  queryKey: ['events', page, orderBy, selectedCategory, selectedStatus],
+  queryFn: () => {
+    const categoryValue =
+      selectedCategory !== 'all'
+        ? (() => {
+            const found = categories.find((cat) => cat.key === selectedCategory);
+            return found ? (isArabic ? found.label_ar : found.label_en) : undefined;
+          })()
+        : undefined;
 
-      if (categoryParam && isArabic) {
-        const found = categories.find((cat) => cat.key === categoryParam);
-        if (found) categoryParam = found.label_ar;
-      }
+    const statusValue = selectedStatus !== 'all' ? selectedStatus : undefined;
 
-      return eventsService.getAllEvents(page, pageSize, orderBy, categoryParam);
-    },
+    return eventsService.getAllEvents(page, pageSize, orderBy, categoryValue, statusValue);
+  },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -122,6 +126,11 @@ const HomePage = () => {
     setPage(1);
   };
 
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+    setPage(1);
+  };
+
   if (isLoading || deleteMutation.isLoading) return <LoadingSpinner />;
 
   if (error) {
@@ -153,8 +162,13 @@ const HomePage = () => {
               </option>
             ))}
           </select>
+
+          <select onChange={handleStatusChange} value={selectedStatus}
+            style={{ backgroundColor: currentTheme.cardBackground, color: currentTheme.textPrimary, border: `1px solid ${currentTheme.borderColor}`, padding: '0.5rem 1rem', borderRadius: '8px' }}>
+            <option value="all">{t('All Events')}</option>
+            <option value="inactive">{t('Expired')}</option>
+          </select>
         </div>
-        
 
         {/* Events Grid */}
         <div className="container py-3">

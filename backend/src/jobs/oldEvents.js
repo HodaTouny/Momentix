@@ -11,10 +11,10 @@ function startEventStatusCron() {
       const updated = await prisma.event.updateMany({
         where: {
           date: { lt: now },
-          status: "Active",
+          status: "active",
         },
         data: {
-          status: "inActive",
+          status: "inactive",
         },
       });
 

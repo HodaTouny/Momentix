@@ -1,13 +1,21 @@
 import apiClient from './apiService';
 import i18n from '../i18n';
 const eventsService = {
-   getAllEvents: async (page = 1, pageSize = 10, orderBy = ['date_DESC'], category) => {
-    const currentLang = i18n.language || 'en'; 
+   getAllEvents: async (
+    page = 1,
+    pageSize = 10,
+    orderBy = ['date_DESC'],
+    category,
+    status
+  ) => {
+    const currentLang = i18n.language || 'en';
+
     const params = {
       page,
       pageSize,
-      orderBy: JSON.stringify(orderBy), 
+      orderBy: JSON.stringify(orderBy),
     };
+
     if (category && category !== 'all') {
       if (currentLang === 'ar') {
         params.category_ar = category;
@@ -15,8 +23,12 @@ const eventsService = {
         params.category_en = category;
       }
     }
+    if (status && status !== 'all') {
+      params.status = status;
+    }
+
     const { data } = await apiClient.get('/api/events', { params });
-    return data.events; 
+    return data.events;
   },
 
   getEventById: async (id) => {

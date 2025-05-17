@@ -71,7 +71,6 @@ const resources = {
       "Events per Category": "Events per Category",
       "Revenue per Category": "Revenue per Category",
       "All Events":"All Events",
-      "Upcoming" :"Upcoming",
       "Expired":"Expired"
 
 
@@ -145,7 +144,6 @@ const resources = {
       "Events per Category": "الفعاليات حسب الفئة",
       "Revenue per Category": "الإيرادات حسب الفئة",
       "All Events":"كل الفاعليات",
-      "Upcoming" :"القادمة",
       "Expired":"الفائتة"
 
 
