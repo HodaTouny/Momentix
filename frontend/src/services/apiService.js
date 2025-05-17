@@ -1,6 +1,13 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+const getCookies = () => {
+  const access = Cookies.get('access_token');
+  const refrsh = Cookies.get('refresh_token');
+  return { access, refrsh };
+};
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -16,6 +23,11 @@ apiClient.interceptors.request.use(
     const lang = localStorage.getItem('language') || 'en';
     config.headers['Accept-Language'] = lang;
 
+    const { access } = getCookies();
+    if (access) {
+      config.headers['Authorization'] = `Bearer ${access}`;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -27,11 +39,24 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      const { refrsh } = getCookies();
+      if (!refrsh) {
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
 
       try {
-        await apiClient.post('/api/auth/refresh');
-        return apiClient(originalRequest);
+        const refreshResponse = await apiClient.post('/api/auth/refresh');
+        const newAccessToken = refreshResponse?.data?.access_token;
+
+        if (newAccessToken) {
+          Cookies.set('access_token', newAccessToken);
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          return apiClient(originalRequest);
+        }
+
+        return Promise.reject(refreshResponse);
       } catch (refreshError) {
         console.error('Refresh token failed or expired. Logging out user.');
         return Promise.reject(refreshError);
@@ -49,6 +74,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default apiClient;
