@@ -24,8 +24,11 @@ function requireUser(req, res, next) {
 
 
 const authenticateJWT = async (req, res, next) => {
+  console.log('Cookies received:', req.cookies);
+
   const token = req.cookies.access_token;
   i18n.setLocale(req.headers['accept-language'] || 'en');
+  
 
   if (token) {
     try {
