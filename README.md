@@ -19,11 +19,27 @@ All diagrams, architecture, testing strategy, database models, and system workfl
 - Browse, search, and book events
 - Prevent duplicate bookings per user per event
 - Admin event management (create, edit, delete)
-- Event analytics with visual charts (Chart.js)
+- Admin dashboard Event analytics with visual charts (Chart.js)
 - AI-generated Arabic/English event descriptions
 - Cloud-based image uploads (Cloudinary)
 - Rate limiting, helmet, input validation (Joi)
 - Testing with Jest and Postman
+
+## Credentials
+
+Use the following credentials to access the system:
+
+### Admin
+
+- **Email:** admin1@gmail.com  
+- **Password:** Admin123@
+
+### User
+
+You can register your own account, or use this sample user:
+
+- **Email:** hodasammiir@gmail.com  
+- **Password:** Hoda2002#
 
 ## Tech Stack
 
