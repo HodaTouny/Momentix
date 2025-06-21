@@ -1,0 +1,666 @@
+{
+	"info": {
+		"_postman_id": "30b6b2db-2f66-4aac-b014-c6e0588316d6",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31618683",
+		"_collection_link": "https://solar-robot-92446.postman.co/workspace/My-Workspace~75b20c7b-cca2-4d81-8a6b-ea88838c0606/collection/31618683-30b6b2db-2f66-4aac-b014-c6e0588316d6?action=share&source=collection_link&creator=31618683"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Hoda Samir Touny Mohammed\",\r\n  \"username\": \"Hoda_Touny\",\r\n  \"email\": \"hodasammir@gmail.com\",\r\n  \"password\": \"12345678\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/register",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/refresh",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/logout",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/me",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hodasammiir@gmail.com\",\r\n  \"password\": \"12345678\"\r\n}\r\n\r\n// admin\r\n// {\r\n//   \"email\": \"newadmin@example.com\",\r\n//   \"password\": \"securepassword\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/login",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Management",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"newadmin\",\r\n  \"name\": \"Test Admin\",\r\n  \"email\": \"newadmin@example.com\",\r\n  \"password\": \"securepassword\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/admins",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"admins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getall",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"newadmin\",\r\n  \"name\": \"Test Admin\",\r\n  \"email\": \"newadmin@example.com\",\r\n  \"password\": \"securepassword\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/admins",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"admins"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/admins/8994f941-9d92-4790-8648-9b9b4f1d837e",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"admins",
+								"8994f941-9d92-4790-8648-9b9b4f1d837e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Updated Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/admins/8892cfbb-f3f5-4b57-a333-43816e971c91",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"admins",
+								"8892cfbb-f3f5-4b57-a333-43816e971c91"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user Management",
+			"item": [
+				{
+					"name": "get all user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/users",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/users/da888f87-4990-407f-9230-74f51c120253",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"users",
+								"da888f87-4990-407f-9230-74f51c120253"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category Management",
+			"item": [
+				{
+					"name": "create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//   \"name\": \"Computer\"\r\n// }\r\n\r\n{\r\n  \"name\": \"intel\",\r\n  \"parentId\": \"6550e835-ea70-4331-a5e0-b76788850d48\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/categories",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/categories",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"AMD\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/categories/1411620d-ff22-4b7f-871b-e33f00d65bf8",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1411620d-ff22-4b7f-871b-e33f00d65bf8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/categories/a2c24fb9-3d64-48b9-aa55-d99d0a28b412",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"categories",
+								"a2c24fb9-3d64-48b9-aa55-d99d0a28b412"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product management",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "MacBook Pro",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "MacBook Pro add to test the endpoint",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "available",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "6550e835-ea70-4331-a5e0-b76788850d48",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/omart/OneDrive/Pictures/Screenshots/Screenshot 2025-06-15 155130.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/products",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "price",
+									"value": "298777",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/products/25e6b714-2850-4db4-bedb-28bc2a21c2cf",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"products",
+								"25e6b714-2850-4db4-bedb-28bc2a21c2cf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "price",
+									"value": "27444",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/products/2a9946ba-276c-4293-b0ab-34f41a9aebac",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"products",
+								"2a9946ba-276c-4293-b0ab-34f41a9aebac"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/products",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "wishList",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/whishlists/25e6b714-2850-4db4-bedb-28bc2a21c2cf",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"whishlists",
+								"25e6b714-2850-4db4-bedb-28bc2a21c2cf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/whishlists",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"whishlists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://avunet-backend-internship-assessment.onrender.com/api/whishlists/1c7fa848-e767-4544-b3f6-9c685ba5cdf5",
+							"protocol": "https",
+							"host": [
+								"avunet-backend-internship-assessment",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"api",
+								"whishlists",
+								"1c7fa848-e767-4544-b3f6-9c685ba5cdf5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
